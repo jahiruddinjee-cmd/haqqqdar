@@ -10,7 +10,7 @@ import {
 import { 
   Search, Shield, CheckCircle2, ChevronRight, Download, Copy, AlertTriangle, 
   PhoneCall, FileText, UserCheck, EyeOff, X, Volume2, VolumeX, Menu, Activity, Info, Landmark, HelpCircle, ArrowRight,
-  Sprout, Globe, Clock, Compass
+  Sprout, Globe, Clock, Compass, Users, Briefcase, GraduationCap, Building2, User, Flame, AlertCircle, Home
 } from "lucide-react";
 import {
   UI_TRANSLATIONS,
@@ -22,6 +22,7 @@ import { INTERESTING_FACTS_LIST } from "./data/interestingFacts";
 import { AdminPanel } from "./components/AdminPanel";
 import { DocumentIntelligence } from "./components/DocumentIntelligence";
 import { LifeNavigatorHub } from "./components/LifeNavigatorHub";
+import { LIFE_CRISIS_PLAYBOOKS, CrisisPlaybook } from "./data/lifeCrisisPlaybooks";
 
 const IndianFlagBackground: React.FC = () => {
   return (
@@ -174,6 +175,11 @@ export default function App() {
   const [chatLoading, setChatLoading] = useState<boolean>(false);
   const [chatSpeechEnabled, setChatSpeechEnabled] = useState<boolean>(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
+
+  // Sub-tabs for Haqqdar Assistant: "chat" or "crisis" (Life Crisis Navigator)
+  const [assistantSubTab, setAssistantSubTab] = useState<"chat" | "crisis">("chat");
+  const [selectedCrisisId, setSelectedCrisisId] = useState<string | null>(null);
+  const [userCheckedDocs, setUserCheckedDocs] = useState<Record<string, Record<string, boolean>>>({});
 
   // Agritech Shield variables
   const [agriCropType, setAgriCropType] = useState<string>("Kharif");
@@ -3001,126 +3007,515 @@ Date: ${dateStr}`;
 
         {/* 6. ASSISTANT TAB (Haqqdar guidance assistant / chatbot with localized search fallbacks) */}
         {activeTab === "assistant" && (
-          <div className="space-y-8 animate-fadeIn max-w-4xl mx-auto" id="tab-view-assistant">
+          <div className="space-y-8 animate-fadeIn max-w-5xl mx-auto" id="tab-view-assistant">
             
             <div className="text-center space-y-3">
               <span className="text-xs text-[#FF9933] font-black uppercase tracking-widest bg-amber-500/10 border border-amber-500/20 px-3 py-1.5 rounded-full inline-flex items-center gap-1.5">
-                <HelpCircle className="w-3.5 h-3.5" /> Citizens Guidance system
+                <Compass className="w-3.5 h-3.5 text-saffron" /> {language === "Hindi" ? "नागरिक मार्गदर्शन प्रणाली" : "Citizens Guidance System"}
               </span>
               <h1 className="font-serif text-3xl md:text-4xl font-extrabold tracking-tight text-white">Haqqdar Assistant</h1>
               <p className="text-xs text-gray-400 max-w-xl mx-auto leading-relaxed">
-                Explain eligibility, document readiness protocols, or rejection remarks immediately. Enabled with bilingual speech translation capabilities.
+                {language === "Hindi" 
+                  ? "अपनी अस्वीकृति, दस्तावेज़ तत्परता या पात्रता के बारे में तुरंत पूछताछ करें। एकीकृत लाइफ क्राइसिस नेविगेटर।"
+                  : "Explain eligibility, document readiness protocols, or rejection remarks immediately. Integrated with the state-of-the-art Bureaucracy Navigator."}
               </p>
             </div>
 
-            {/* Chatbox shell */}
-            <div className="glass-panel rounded-3xl border-white/10 overflow-hidden h-[600px] flex flex-col justify-between bg-black/40">
-              
-              {/* Chat Header */}
-              <div className="p-4 border-b border-white/10 bg-[#0A0D18] flex justify-between items-center shrink-0">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-zinc-950 border border-white/10 rounded-full flex items-center justify-center text-green">
-                    <div className="w-6 h-6 flex items-center justify-center">
-                      {/* Mini Haqqdar Logo inside AI Chat */}
-                      <svg viewBox="0 0 100 100" className="w-full h-full select-none" referrerPolicy="no-referrer">
-                        <path d="M 50 8 A 42 42 0 0 0 16 80 A 40 40 0 0 1 50 14 Z" fill="#FF9933" />
-                        <path d="M 50 8 A 42 42 0 0 1 84 80 A 40 40 0 0 0 50 14 Z" fill="#22C55E" />
-                        <circle cx="50" cy="46" r="4" fill="#FFFFFF" />
-                        <path d="M 35 40 C 40 49, 47 54, 50 66 C 53 54, 60 49, 65 40 Z" fill="#FFFFFF" />
-                      </svg>
-                    </div>
-                  </div>
-                  <div>
-                    <h4 className="font-serif font-black text-xs text-shimmer-dynamic leading-tight">Haqqdar Assistant</h4>
-                    <span className="text-[9px] text-saffron block font-semibold uppercase tracking-wider">Bilingual Citizen AI Counsel</span>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  {/* Cool Digital Clock and Date indicator for AI Counselor Workspace */}
-                  <div className="flex items-center gap-2 px-3 py-1.5 bg-zinc-950 border border-amber-500/30 rounded-xl text-xs font-mono text-[#FF9933] shadow-inner select-none">
-                    <Clock className="w-3.5 h-3.5 text-saffron shrink-0" />
-                    <span className="font-extrabold tracking-widest">{clockTime}</span>
-                    <span className="text-[9px] text-zinc-400 font-sans font-bold border-l border-zinc-800 pl-2 hidden sm:inline">{clockDate}</span>
-                  </div>
-
-                  {/* Speech read-aloud option */}
-                  <button 
-                    onClick={() => {
-                      setChatSpeechEnabled(!chatSpeechEnabled);
-                      triggerFeedback(chatSpeechEnabled ? "Speech conversion output disabled." : "Bilingual Smart read aloud enabled.");
-                      if (!chatSpeechEnabled) {
-                        speakText("नमसकार! Read-aloud voice support has been activated.");
-                      }
-                    }}
-                    id="chat-speech-toggle-btn"
-                    className={`px-3 py-1.5 rounded-lg border text-[10px] uppercase font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-                      chatSpeechEnabled 
-                        ? "bg-amber-500 text-black border-amber-500 font-extrabold" 
-                        : "border-white/15 text-gray-400 hover:bg-white/5"
-                    }`}
-                  >
-                    {chatSpeechEnabled ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
-                    <span>{chatSpeechEnabled ? "Voice ON" : "Voice Off"}</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Chat Message Scroll list */}
-              <div className="flex-1 overflow-y-auto p-4 space-y-4" id="chat-messages-container">
-                {chatHistory.map((msg, idx) => (
-                  <div 
-                    key={idx}
-                    className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"} animate-fadeIn`}
-                  >
-                    <div 
-                      className={`max-w-md rounded-2xl p-4 space-y-1 shadow ${
-                        msg.role === "user" 
-                          ? "bg-gradient-to-tr from-[#FF9933] to-[#FF9933]/90 text-black font-semibold rounded-tr-none text-xs" 
-                          : "bg-white/[0.03] border border-white/5 text-gray-200 rounded-tl-none font-sans text-xs leading-relaxed"
-                      }`}
-                    >
-                      <pre className="whitespace-pre-wrap font-sans text-xs">{msg.text}</pre>
-                      <span className="block text-[8px] text-right text-gray-500/80 font-bold uppercase tracking-widest">{msg.time}</span>
-                    </div>
-                  </div>
-                ))}
-
-                {chatLoading && (
-                  <div className="flex justify-start">
-                    <div className="bg-white/[0.03] border border-white/5 rounded-2xl rounded-tl-none p-4 max-w-sm space-y-2 flex items-center gap-2">
-                      <span className="w-2 h-2 bg-[#FF9933] rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-                      <span className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-                      <span className="w-2 h-2 bg-[#138808] rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
-                      <span className="text-[10px] text-gray-500 uppercase font-bold tracking-widest ml-1">Searching directory...</span>
-                    </div>
-                  </div>
-                )}
-                
-                <div ref={chatEndRef} />
-              </div>
-
-              {/* Chat Input form Footer */}
-              <div className="p-4 bg-[#0A0D18] border-t border-white/10 shrink-0 flex gap-3">
-                <input 
-                  type="text"
-                  placeholder="Describe your denial status or question (e.g. why am I rejected from PMAY or Ishan Uday?)..."
-                  value={chatInput}
-                  onChange={(e) => setChatInput(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleChatSubmit()}
-                  id="chat-input-field"
-                  className="w-full bg-[#05070F] border border-white/10 rounded-xl px-4 py-3.5 text-xs text-white placeholder-gray-500 outline-none focus:border-amber-500 font-medium"
-                />
-                <button 
-                  onClick={() => handleChatSubmit()}
-                  id="chat-submit-btn"
-                  className="bg-gradient-to-r from-[#FF9933] to-[#FF9933]/90 text-black font-extrabold px-5 rounded-xl text-xs hover:opacity-90 flex items-center justify-center shrink-0 block"
+            {/* 🆕 HIGH-POLISHED SUB-TAB SELECTOR (MINIMAL & GORGEOUS) */}
+            <div className="flex justify-center" id="assistant-sub-tabs-bar">
+              <div className="bg-zinc-950/80 border border-white/10 rounded-2xl p-1 inline-flex gap-1 shadow-2xl">
+                <button
+                  onClick={() => {
+                    setAssistantSubTab("chat");
+                    triggerFeedback(language === "Hindi" ? "एआई सलाहकार सक्रिय" : "Switched to Interactive AI Advisor.");
+                  }}
+                  id="subtab-ai-chat-btn"
+                  className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+                    assistantSubTab === "chat"
+                      ? "bg-gradient-to-r from-[#FF9933] to-[#FF9933]/90 text-black font-black shadow-md"
+                      : "text-gray-400 hover:text-white"
+                  }`}
                 >
-                  Ask advisor
+                  <HelpCircle className="w-4 h-4" />
+                  <span>{language === "Hindi" ? "इंटरेक्टिव एआई सलाहकार" : "Interactive AI Advisor"}</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setAssistantSubTab("crisis");
+                    triggerFeedback(language === "Hindi" ? "लाइफ क्राइसिस नेविगेटर सक्रिय" : "Switched to Life Crisis Navigator.");
+                  }}
+                  id="subtab-crisis-nav-btn"
+                  className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer relative overflow-hidden ${
+                    assistantSubTab === "crisis"
+                      ? "bg-gradient-to-r from-[#FF9933] to-[#FF9933]/90 text-black font-black shadow-md"
+                      : "text-gray-400 hover:text-white"
+                  }`}
+                >
+                  <Compass className={`w-4 h-4 ${assistantSubTab === "crisis" ? "animate-spin" : ""}`} style={{ animationDuration: "12s" }} />
+                  <span>{language === "Hindi" ? "लाइफ क्राइसिस नेविगेटर™" : "Life Crisis Navigator™"}</span>
+                  <span className="absolute top-1 right-1 flex h-1.5 w-1.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#FF9933]"></span>
+                  </span>
                 </button>
               </div>
-
             </div>
+
+            {/* SUB-TAB CONTENTS */}
+            {assistantSubTab === "chat" ? (
+              /* --- CHAT SUITE --- */
+              <div className="space-y-4">
+                {/* Visual Suggested Quick Triggers */}
+                <div className="flex items-center gap-2 flex-wrap justify-center py-1">
+                  <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider pr-1">{language === "Hindi" ? "त्वरित सुझाव:" : "Quick Suggestions:"}</span>
+                  {[
+                    { text: "PM Kisan", label: "🚜 PM Kisan" },
+                    { text: "Ayushman Bharat", label: "🏥 Ayushman Card" },
+                    { text: "Scholarships", label: "🎓 Ishan Uday" },
+                    { text: "Aadhaar lost", label: "🆔 Aadhaar Check" },
+                    { text: "My claim was rejected", label: "❌ Rejection Help" },
+                    { text: "No documents", label: "🛡️ Undocumented Help" }
+                  ].map((chip) => (
+                    <button
+                      key={chip.text}
+                      onClick={() => handleChatSubmit(chip.text)}
+                      className="px-3 py-1 bg-zinc-950/60 border border-white/5 rounded-full text-[10px] text-gray-300 font-medium hover:border-[#FF9933] hover:text-[#FF9933] transition-all cursor-pointer"
+                    >
+                      {chip.label}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Chatbox shell */}
+                <div className="glass-panel rounded-3xl border-white/10 overflow-hidden h-[540px] flex flex-col justify-between bg-[#05070f]/90">
+                  
+                  {/* Chat Header */}
+                  <div className="p-4 border-b border-white/10 bg-[#0A0D18] flex justify-between items-center shrink-0">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-zinc-950 border border-white/10 rounded-full flex items-center justify-center text-green">
+                        <div className="w-6 h-6 flex items-center justify-center">
+                          <svg viewBox="0 0 100 100" className="w-full h-full select-none" referrerPolicy="no-referrer">
+                            <path d="M 50 8 A 42 42 0 0 0 16 80 A 40 40 0 0 1 50 14 Z" fill="#FF9933" />
+                            <path d="M 50 8 A 42 42 0 0 1 84 80 A 40 40 0 0 0 50 14 Z" fill="#22C55E" />
+                            <circle cx="50" cy="46" r="4" fill="#FFFFFF" />
+                            <path d="M 35 40 C 40 49, 47 54, 50 66 C 53 54, 60 49, 65 40 Z" fill="#FFFFFF" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div>
+                        <h4 className="font-serif font-black text-xs text-shimmer-dynamic leading-tight">Haqqdar Assistant</h4>
+                        <span className="text-[9px] text-saffron block font-semibold uppercase tracking-wider">Bilingual Citizen AI Counsel</span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2 px-3 py-1.5 bg-zinc-950 border border-amber-500/30 rounded-xl text-xs font-mono text-[#FF9933] shadow-inner select-none">
+                        <Clock className="w-3.5 h-3.5 text-saffron shrink-0" />
+                        <span className="font-extrabold tracking-widest">{clockTime}</span>
+                        <span className="text-[9px] text-zinc-400 font-sans font-bold border-l border-zinc-800 pl-2 hidden sm:inline">{clockDate}</span>
+                      </div>
+
+                      <button 
+                        onClick={() => {
+                          setChatSpeechEnabled(!chatSpeechEnabled);
+                          triggerFeedback(chatSpeechEnabled ? "Speech conversion output disabled." : "Bilingual Smart read aloud enabled.");
+                          if (!chatSpeechEnabled) {
+                            speakText("नमसकार! Read-aloud voice support has been activated.");
+                          }
+                        }}
+                        id="chat-speech-toggle-btn"
+                        className={`px-3 py-1.5 rounded-lg border text-[10px] uppercase font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                          chatSpeechEnabled 
+                            ? "bg-amber-500 text-black border-amber-500 font-extrabold" 
+                            : "border-white/15 text-gray-400 hover:bg-white/5"
+                        }`}
+                      >
+                        {chatSpeechEnabled ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
+                        <span>{chatSpeechEnabled ? "Voice ON" : "Voice Off"}</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Chat Message Scroll list */}
+                  <div className="flex-1 overflow-y-auto p-4 space-y-4" id="chat-messages-container">
+                    {chatHistory.map((msg, idx) => (
+                      <div 
+                        key={idx}
+                        className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"} animate-fadeIn`}
+                      >
+                        <div 
+                          className={`max-w-md rounded-2xl p-4 space-y-2 shadow ${
+                            msg.role === "user" 
+                              ? "bg-gradient-to-tr from-[#FF9933] to-[#FF9933]/90 text-black font-semibold rounded-tr-none text-xs" 
+                              : "bg-white/[0.03] border border-white/5 text-gray-200 rounded-tl-none font-sans text-xs leading-relaxed"
+                          }`}
+                        >
+                          <pre className="whitespace-pre-wrap font-sans text-xs">{msg.text}</pre>
+                          <span className="block text-[8px] text-right text-gray-500/80 font-bold uppercase tracking-widest">{msg.time}</span>
+                        </div>
+                      </div>
+                    ))}
+
+                    {chatLoading && (
+                      <div className="flex justify-start">
+                        <div className="bg-white/[0.03] border border-white/5 rounded-2xl rounded-tl-none p-4 max-w-sm space-y-2 flex items-center gap-2">
+                          <span className="w-2 h-2 bg-[#FF9933] rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                          <span className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                          <span className="w-2 h-2 bg-[#138808] rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                          <span className="text-[10px] text-gray-500 uppercase font-bold tracking-widest ml-1">Searching directory...</span>
+                        </div>
+                      </div>
+                    )}
+                    
+                    <div ref={chatEndRef} />
+                  </div>
+
+                  {/* Chat Input form Footer */}
+                  <div className="p-4 bg-[#0A0D18] border-t border-white/10 shrink-0 flex gap-3">
+                    <input 
+                      type="text"
+                      placeholder="Describe your denial status or question (e.g. why am I rejected from PMAY or Ishan Uday?)..."
+                      value={chatInput}
+                      onChange={(e) => setChatInput(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && handleChatSubmit()}
+                      id="chat-input-field"
+                      className="w-full bg-[#05070F] border border-white/10 rounded-xl px-4 py-3.5 text-xs text-white placeholder-gray-500 outline-none focus:border-amber-500 font-medium"
+                    />
+                    <button 
+                      onClick={() => handleChatSubmit()}
+                      id="chat-submit-btn"
+                      className="bg-gradient-to-r from-[#FF9933] to-[#FF9933]/90 text-black font-extrabold px-5 rounded-xl text-xs hover:opacity-90 flex items-center justify-center shrink-0 block"
+                    >
+                      {language === "Hindi" ? "सलाहकार से पूछें" : "Ask advisor"}
+                    </button>
+                  </div>
+
+                </div>
+              </div>
+            ) : (
+              /* --- BUREAUCRACY & LIFE CRISIS NAVIGATOR PANEL (12 KEY STATES) --- */
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 animate-fadeIn" id="life-crisis-navigator-suite">
+                
+                {/* Visual LEFT column: Grid of 12 Events */}
+                <div className="lg:col-span-5 space-y-4">
+                  <div className="p-4 bg-zinc-950 border border-white/5 rounded-2xl">
+                    <h3 className="text-xs uppercase font-extrabold text-[#FF9933] tracking-widest mb-1">
+                      {language === "Hindi" ? "१२ आपातकालीन जीवन स्थितियां" : "12 Emergency Life Situations"}
+                    </h3>
+                    <p className="text-[10px] text-gray-400">
+                      {language === "Hindi" 
+                        ? "संविधान और सरकारी नियमों के अंतर्गत अपनी स्थिति चुनें:" 
+                        : "Select your current state of affairs to unlock a complete roadmap:"}
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 max-h-[460px] overflow-y-auto pr-1" id="crisis-grid-list">
+                    {LIFE_CRISIS_PLAYBOOKS.map((pb) => {
+                      const IconComponent = (() => {
+                        switch (pb.iconName) {
+                          case "Users": return Users;
+                          case "Briefcase": return Briefcase;
+                          case "GraduationCap": return GraduationCap;
+                          case "Building2": return Building2;
+                          case "User": return User;
+                          case "Activity": return Activity;
+                          case "AlertTriangle": return AlertTriangle;
+                          case "Sprout": return Sprout;
+                          case "Globe": return Globe;
+                          case "Landmark": return Landmark;
+                          case "Home": return Home;
+                          default: return HelpCircle;
+                        }
+                      })();
+                      const isSelected = selectedCrisisId === pb.id || (!selectedCrisisId && pb.id === "family-loss");
+                      
+                      return (
+                        <button
+                          key={pb.id}
+                          onClick={() => {
+                            setSelectedCrisisId(pb.id);
+                            triggerFeedback(language === "Hindi" ? `चयनित: ${pb.title_hi}` : `Analyzing playbook: ${pb.title_en}`);
+                          }}
+                          className={`p-3 rounded-2xl text-left border transition-all cursor-pointer flex flex-col justify-between h-[96px] ${
+                            isSelected
+                              ? "bg-gradient-to-b from-[#1c2333]/90 to-[#0A0D18]/90 border-[#FF9933] shadow-lg shadow-[#FF9933]/5 scale-[0.98]"
+                              : "bg-zinc-950/40 border-white/5 hover:border-white/10 hover:bg-zinc-900/40"
+                          }`}
+                        >
+                          <div className="flex justify-between items-start w-full">
+                            <div className={`p-1.5 rounded-xl ${isSelected ? "bg-[#FF9933]/15 text-[#FF9933]" : "bg-white/5 text-gray-400"}`}>
+                              <IconComponent className="w-4 h-4" />
+                            </div>
+                            {isSelected && <span className="w-1.5 h-1.5 bg-[#FF9933] rounded-full" />}
+                          </div>
+                          
+                          <span className={`text-[11px] font-bold line-clamp-2 leading-tight ${isSelected ? "text-white" : "text-gray-300"}`}>
+                            {language === "Hindi" ? pb.title_hi : pb.title_en}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Right Column: Detailed Interactive Playbook Inspector */}
+                <div className="lg:col-span-7">
+                  {(() => {
+                    const activeCrisis = LIFE_CRISIS_PLAYBOOKS.find(c => c.id === (selectedCrisisId || "family-loss")) || LIFE_CRISIS_PLAYBOOKS[0];
+                    const stateCheckedDocs = userCheckedDocs[activeCrisis.id] || {};
+                    const totalDocsCount = activeCrisis.documents.length;
+                    const checkedCount = Object.values(stateCheckedDocs).filter(Boolean).length;
+                    
+                    // Critical document check validation
+                    const missingCritical = activeCrisis.documents.some(doc => doc.isCritical && !stateCheckedDocs[doc.name_en]);
+                    
+                    // Dynamic score: 40% base + distributed percentage from checking documents
+                    const dynamicScore = totalDocsCount > 0 
+                      ? Math.min(10, Math.round(3 + (checkedCount / totalDocsCount) * 7)) 
+                      : 4;
+
+                    return (
+                      <div className="glass-panel rounded-3xl border-white/10 p-5 space-y-6 bg-black/60 relative overflow-hidden" id="crisis-inspector-card">
+                        
+                        {/* Shimmer background accent */}
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl pointer-events-none" />
+
+                        <div className="flex justify-between items-start gap-4">
+                          <div>
+                            <span className="text-[10px] uppercase font-mono tracking-widest text-[#FF9933] font-bold px-2 py-1 bg-amber-500/10 rounded-lg inline-block mb-2">
+                              {language === "Hindi" ? "सरकारी प्लेबुक निर्देशिका" : "GOVERNMENT PLAYBOOK"}
+                            </span>
+                            <h2 className="text-xl font-serif font-black text-white leading-tight">
+                              {language === "Hindi" ? activeCrisis.title_hi : activeCrisis.title_en}
+                            </h2>
+                          </div>
+                          <div className="text-right shrink-0">
+                            <span className="text-[9px] uppercase font-bold text-gray-400 block tracking-wider">
+                              {language === "Hindi" ? "अनुमानित समय" : "EXPECTED TIMELINE"}
+                            </span>
+                            <span className="text-sm font-semibold text-white tracking-wide flex items-center gap-1 mt-0.5 font-mono">
+                              ⏱️ {language === "Hindi" ? activeCrisis.expectedTimeline_hi : activeCrisis.expectedTimeline_en}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Tell me what happened scenario Quote */}
+                        <div className="p-3 bg-white/[0.02] border border-white/5 rounded-2xl text-xs italic text-gray-300 relative">
+                          <span className="absolute -top-2 left-3 px-1.5 bg-[#0d0f19] text-[9px] text-[#FF9933] uppercase tracking-wider font-extrabold select-none">
+                            {language === "Hindi" ? "नागरिक स्थिति शिकायत" : "Tell Me What Happened"}
+                          </span>
+                          <p className="leading-relaxed">
+                            {language === "Hindi" ? activeCrisis.citizenRoleQuote_hi : activeCrisis.citizenRoleQuote_en}
+                          </p>
+                        </div>
+
+                        {/* DYNAMIC READINESS CALCULATOR (VERY WINNING COMPONENT) */}
+                        <div className="p-4 bg-zinc-950 border border-white/10 rounded-2xl space-y-3">
+                          <div className="flex justify-between items-center bg-zinc-900/60 p-2.5 rounded-xl border border-white/5">
+                            <div>
+                              <h4 className="text-xs font-bold text-white flex items-center gap-1.5">
+                                📊 {language === "Hindi" ? "दस्तावेज़ तत्परता स्कोर" : "Document Readiness Score"}
+                              </h4>
+                              <p className="text-[9px] text-gray-400 mt-0.5">
+                                {language === "Hindi" 
+                                  ? "नीचे सूचीबद्ध अपने पास मौजूद दस्तावेजों पर टिक करें:" 
+                                  : "Tick items you already hold below to compute score:"}
+                              </p>
+                            </div>
+                            <div className="text-center bg-black px-3 py-1.5 rounded-lg border border-white/10">
+                              <span className="text-shimmer-dynamic text-xs font-black uppercase tracking-wider block">
+                                {language === "Hindi" ? "तैयारी" : "READINESS"}
+                              </span>
+                              <span className="text-lg font-mono font-black text-white">{dynamicScore}/10</span>
+                            </div>
+                          </div>
+
+                          {/* Dynamic recommendation alert */}
+                          {missingCritical ? (
+                            <div className="p-2.5 bg-red-500/10 border border-red-500/20 rounded-xl text-[10px] text-red-200 flex items-start gap-2">
+                              <AlertCircle className="w-3.5 h-3.5 text-red-400 shrink-0 mt-0.5" />
+                              <p className="leading-snug">
+                                <strong>{language === "Hindi" ? "चेतावनी:" : "CRITICAL WARNING:"}</strong>{" "}
+                                {language === "Hindi" 
+                                  ? "आप वर्तमान में महत्वपूर्ण दस्तावेज़ खो रहे हैं। इसके बिना सरकारी कार्यालय जाने पर अस्वीकृति का अधिक जोखिम है।" 
+                                  : "You are currently missing critical statutory documents. Going to the circle office without these will likely trigger dynamic rejections."}
+                              </p>
+                            </div>
+                          ) : (
+                            <div className="p-2.5 bg-green-500/10 border border-green-500/20 rounded-xl text-[10px] text-green-200 flex items-start gap-2 animate-fadeIn">
+                              <CheckCircle2 className="w-3.5 h-3.5 text-green-400 shrink-0 mt-0.5" />
+                              <p className="leading-snug">
+                                <strong>{language === "Hindi" ? "उत्कृष्ट तत्परता:" : "EXCELLENT READINESS:"}</strong>{" "}
+                                {language === "Hindi" 
+                                  ? "महत्वपूर्ण आधार दस्तावेज तैयार हैं! आप संबंधित अधिकारियों से संपर्क कर सकते हैं।" 
+                                  : "All critical baseline documents are verified! You are completely safe to initiate compliance application checks."}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Interactive Checklist Table */}
+                        <div className="space-y-2">
+                          <h4 className="text-xs font-bold text-gray-300">
+                            📂 {language === "Hindi" ? "आवश्यक दस्तावेज और प्रमाण पत्र" : "Essential Documents & Checklists"}
+                          </h4>
+                          <div className="border border-white/5 rounded-2xl overflow-hidden bg-black/20 text-[11px] max-h-[180px] overflow-y-auto">
+                            <table className="w-full text-left border-collapse">
+                              <thead>
+                                <tr className="bg-zinc-950 text-gray-400 font-extrabold uppercase border-b border-white/5 text-[9px] tracking-widest">
+                                  <th className="p-2.5 w-12 text-center">{language === "Hindi" ? "पास में है?" : "Have?"}</th>
+                                  <th className="p-2.5">{language === "Hindi" ? "दस्तावेज़ का नाम" : "Document Name"}</th>
+                                  <th className="p-2.5">{language === "Hindi" ? "भूमिका / उद्देश्य" : "Role / Purpose"}</th>
+                                  <th className="p-2.5 text-right pr-4">{language === "Hindi" ? "महत्व" : "Priority"}</th>
+                                </tr>
+                              </thead>
+                              <tbody className="divide-y divide-white/5">
+                                {activeCrisis.documents.map((doc) => {
+                                  const isChecked = !!stateCheckedDocs[doc.name_en];
+                                  return (
+                                    <tr 
+                                      key={doc.name_en} 
+                                      onClick={() => {
+                                        setUserCheckedDocs(prev => {
+                                          const currentPB = prev[activeCrisis.id] || {};
+                                          return {
+                                            ...prev,
+                                            [activeCrisis.id]: {
+                                              ...currentPB,
+                                              [doc.name_en]: !currentPB[doc.name_en]
+                                            }
+                                          };
+                                        });
+                                        triggerFeedback(isChecked ? "Removed document check" : "Marked document as carried");
+                                      }}
+                                      className="hover:bg-white/5 transition-colors cursor-pointer"
+                                    >
+                                      <td className="p-2.5 text-center">
+                                        <input
+                                          type="checkbox"
+                                          checked={isChecked}
+                                          onChange={() => {}} // Hanled by row click
+                                          className="rounded border-white/20 text-[#FF9933] focus:ring-0 cursor-pointer w-3.5 h-3.5"
+                                        />
+                                      </td>
+                                      <td className="p-2.5 font-bold text-white">
+                                        {language === "Hindi" ? doc.name_hi : doc.name_en}
+                                      </td>
+                                      <td className="p-2.5 text-gray-400">
+                                        {language === "Hindi" ? doc.purpose_hi : doc.purpose_en}
+                                      </td>
+                                      <td className="p-2.5 text-right pr-4 shrink-0">
+                                        {doc.isCritical ? (
+                                          <span className="text-[9px] font-black uppercase text-red-400 bg-red-400/10 px-1.5 py-0.5 border border-red-400/20 rounded">
+                                            {language === "Hindi" ? "महत्वपूर्ण" : "Critical"}
+                                          </span>
+                                        ) : (
+                                          <span className="text-[9px] font-bold text-gray-400 bg-white/5 px-1.5 py-0.5 rounded">
+                                            {language === "Hindi" ? "सहायक" : "Supporting"}
+                                          </span>
+                                        )}
+                                      </td>
+                                    </tr>
+                                  );
+                                })}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+
+                        {/* Government Target Offices list */}
+                        <div className="space-y-2">
+                          <h4 className="text-xs font-bold text-gray-300">
+                            🏛️ {language === "Hindi" ? "दौरा किए जाने वाले सरकारी कार्यालय" : "Physical Offices to Visit"}
+                          </h4>
+                          <div className="flex gap-1.5 flex-wrap">
+                            {(language === "Hindi" ? activeCrisis.officesRequired_hi : activeCrisis.officesRequired_en).map((office, idx) => (
+                              <span key={idx} className="bg-zinc-950 border border-white/10 text-gray-300 font-mono text-[10px] px-2.5 py-1 rounded-xl">
+                                📍 {office}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Sequential Government Action Plan Steps */}
+                        <div className="space-y-3">
+                          <h4 className="text-xs font-bold text-gray-300">
+                            🪜 {language === "Hindi" ? "चरण-दर-चरण प्रशासनिक प्रक्रिया" : "Step-by-Step Administrative Bureaucracy"}
+                          </h4>
+                          <div className="space-y-2 relative border-l border-white/5 pl-4 ml-2.5">
+                            {activeCrisis.roadmap.map((step) => (
+                              <div key={step.step} className="space-y-1 relative">
+                                <span className="absolute -left-[27px] top-[1px] w-5 h-5 bg-zinc-950 border border-white/20 text-[9px] text-[#FF9933] font-mono font-black rounded-full flex items-center justify-center">
+                                  {step.step}
+                                </span>
+                                <h5 className="text-[11px] font-black text-white leading-tight">
+                                  {language === "Hindi" ? step.title_hi : step.title_en}
+                                </h5>
+                                <p className="text-[10px] text-gray-400 leading-relaxed">
+                                  {language === "Hindi" ? step.desc_hi : step.desc_en}
+                                </p>
+                                <span className="text-[9px] text-gray-500 block">
+                                  🏛️ {language === "Hindi" ? "कार्यालय:" : "Venue:"} <strong>{step.office}</strong>
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Integrated CTA Buttons */}
+                        <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                          <button
+                            onClick={async () => {
+                              // Auto transition to chatbot with custom crisis template
+                              const queryText = language === "Hindi" 
+                                ? `${activeCrisis.title_hi} - ${activeCrisis.citizenRoleQuote_hi}`
+                                : `${activeCrisis.title_en} - ${activeCrisis.citizenRoleQuote_en}`;
+                              
+                              setAssistantSubTab("chat");
+                              handleChatSubmit(queryText);
+                              triggerFeedback(language === "Hindi" ? "प्रकरण सलाहकार को भेजा गया" : "Passing dynamic case data to active AI advisor...");
+                            }}
+                            className="flex-1 bg-gradient-to-r from-[#FF9933] to-[#FF9933]/90 text-black font-extrabold py-3 px-4 rounded-xl text-xs hover:opacity-95 transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-lg"
+                          >
+                            <HelpCircle className="w-4 h-4" />
+                            <span>{language === "Hindi" ? "💬 इस मामले के बारे में पूछें (एआई)" : "💬 Discuss Case with Advisor (AI)"}</span>
+                          </button>
+                          
+                          <button
+                            onClick={() => {
+                              // Dynamic clipboard build of crisis data
+                              const txt = `BUREAUCRACY PLAYBOOK: ${activeCrisis.title_en}
+==========================================
+Expected Timeline: ${activeCrisis.expectedTimeline_en}
+Situation Quote: ${activeCrisis.citizenRoleQuote_en}
+Readiness Score: ${dynamicScore}/10
+
+Documents Checklist:
+${activeCrisis.documents.map((d, i) => `${i + 1}. [${stateCheckedDocs[d.name_en] ? "X" : " "}] ${d.name_en} (${d.isCritical ? "Required" : "Optional"})`).join("\n")}
+
+Offices to Visit:
+${activeCrisis.officesRequired_en.map((o, i) => `- ${o}`).join("\n")}
+
+Step-By-Step Process:
+${activeCrisis.roadmap.map(r => `Step ${r.step}: ${r.title_en} at ${r.office}\n↳ Instructions: ${r.desc_en}`).join("\n\n")}
+`;
+                              navigator.clipboard.writeText(txt);
+                              triggerFeedback(language === "Hindi" ? "चेकलिस्ट को क्लिपबोर्ड पर सहेजा गया!" : "Checklist safely compiled and copied to clipboard!");
+                            }}
+                            className="bg-white/5 border border-white/10 font-bold py-3 px-4 rounded-xl text-xs text-gray-300 hover:bg-white/10 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                          >
+                            <Copy className="w-3.5 h-3.5 text-gray-400" />
+                            <span>{language === "Hindi" ? "चेकलिस्ट कॉपी करें" : "Copy Checklist"}</span>
+                          </button>
+                        </div>
+
+                      </div>
+                    );
+                  })()}
+                </div>
+
+              </div>
+            )}
 
           </div>
         )}
