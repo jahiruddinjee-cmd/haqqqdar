@@ -1,0 +1,160 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-serif: 'Merriweather', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+
+  --color-navy: #0A0E27;
+  --color-indigo: #1A1F4D;
+  --color-saffron: #FF9933;
+  --color-green: #138808;
+  --color-white: #FFFFFF;
+  --color-glass: rgba(255, 255, 255, 0.05);
+}
+
+/* Base style resets and customizations conforming to Geometric Balance theme */
+body {
+  font-family: var(--font-sans);
+  background-color: #0A0E27;
+  background-image: radial-gradient(circle at 0% 0%, #1A1F4D 0%, transparent 60%), radial-gradient(circle at 100% 100%, #0A0E27 0%, transparent 60%);
+  background-attachment: fixed;
+  color: #F8FAFC; /* Warm bright slate off-white for excellent body readability */
+  overflow-x: hidden;
+  height: 100%;
+}
+
+/* Global font color enhancements for superb dark theme readability */
+.text-gray-400 {
+  color: #E2E8F0 !important; /* Lighter slate-200 for rich body text */
+}
+
+.text-gray-500 {
+  color: #94A3B8 !important; /* Silver-slate-400 for structural secondary metadata */
+}
+
+.text-slate-300 {
+  color: #F1F5F9 !important; /* Brightest slate-100 for premium descriptions */
+}
+
+.text-slate-400 {
+  color: #E2E8F0 !important; /* High-contrast body descriptions */
+}
+
+.text-zinc-400 {
+  color: #E2E8F0 !important; /* High-contrast checklist specifications */
+}
+
+.text-gray-300 {
+  color: #F1F5F9 !important; /* Bright subtitle texts */
+}
+
+/* Subtle Constitution Manuscript Margin / Corner Ornaments updated */
+.manuscript-border {
+  position: relative;
+  border: 1px solid rgba(255, 153, 51, 0.2);
+}
+
+.manuscript-border::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  right: 4px;
+  bottom: 4px;
+  border: 1px solid rgba(255, 153, 51, 0.08);
+  pointer-events: none;
+}
+
+/* Glassmorphism utility card base conforming to Geometric Balance theme */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-panel:hover {
+  border-color: rgba(255, 153, 51, 0.3);
+  box-shadow: 0 10px 30px -10px rgba(255, 153, 51, 0.12);
+}
+
+/* Saffron gradient glow hover */
+.saffron-glow:hover {
+  box-shadow: 0 0 25px rgba(255, 153, 51, 0.35);
+}
+
+/* Clean, smooth scrolling */
+html {
+  scroll-behavior: smooth;
+  background-color: #0A0E27;
+}
+
+/* Ashoka Chakra geometric rotation style */
+@keyframes chakra-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.chakra-bg {
+  transform-origin: center;
+}
+
+@keyframes text-glow-shimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.text-shimmer-dynamic {
+  background: linear-gradient(
+    to right,
+    #FF9933 0%,
+    #FFBC66 25%,
+    #FFFFFF 50%,
+    #69C75E 75%,
+    #138808 100%
+  );
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: text-glow-shimmer 6s ease infinite;
+}
+
+.text-shimmer-dynamic-fast {
+  background: linear-gradient(
+    to right,
+    #FF9933 0%,
+    #FFBC66 20%,
+    #FFFFFF 40%,
+    #138808 60%,
+    #FFFFFF 80%,
+    #FF9933 100%
+  );
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: text-glow-shimmer 4s linear infinite;
+}
+
+/* Premium micro-pulse keyframe for the Indian Flag wheel */
+@keyframes delicate-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.95; }
+  50% { transform: scale(1.05); opacity: 1; }
+}
+
+.delicate-pulse-glow {
+  animation: delicate-pulse 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+
+

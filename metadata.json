@@ -1,0 +1,6 @@
+{
+  "name": "Haqqdar",
+  "description": "Citizen Rights & Entitlement Recovery Platform. Discover government entitlements, prepare documents, recover rejected benefits, and access verified public services.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
