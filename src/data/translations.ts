@@ -15,7 +15,7 @@ export const UI_TRANSLATIONS: Record<string, KeyTranslation> = {
   "tab.benefits": { en: "Benefits Console", hi: "सरकारी योजनाएं" },
   "tab.agriculture": { en: "Agritech Shield", hi: "कृषि संवर्धन" },
   "tab.appeals": { en: "Appeals & RTI", hi: "आरटीआई और अपील" },
-  "tab.assistant": { en: "Citizen AI", hi: "सिटिजन असिस्टेंट" },
+  "tab.assistant": { en: "Guardian Network", hi: "अभिभावक नेटवर्क" },
   "tab.northeast": { en: "Northeast Hub", hi: "उत्तर-पूर्वी हब" },
 
   // Header and Taglines
