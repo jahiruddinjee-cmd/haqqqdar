@@ -10,7 +10,7 @@ import {
 import { 
   Search, Shield, CheckCircle2, ChevronRight, Download, Copy, AlertTriangle, 
   PhoneCall, FileText, UserCheck, EyeOff, X, Volume2, VolumeX, Menu, Activity, Info, Landmark, HelpCircle, ArrowRight,
-  Sprout, Globe, Clock, Compass, Users, Briefcase, GraduationCap, Building2, User, Flame, AlertCircle, Home
+  Sprout, Globe, Clock, Compass, Users, Briefcase, GraduationCap, Building2, User, Flame, AlertCircle, Home, Lock
 } from "lucide-react";
 import {
   UI_TRANSLATIONS,
@@ -969,11 +969,13 @@ Date: ${dateStr}`;
           {/* Accessibility controls and Language Dropdown */}
           <div className="flex items-center gap-1.5">
             
-            {/* Live Indian Ticking Clock & Date Widget */}
-            <div className="hidden md:flex flex-col items-end px-3.5 py-1 bg-zinc-950/60 border border-white/5 rounded-xl text-right">
-              <span className="text-[10px] font-black text-[#FF9933] tracking-widest font-mono shrink-0 select-none animate-pulse">{clockTime}</span>
-              <span className="text-[8px] font-semibold text-zinc-400 uppercase tracking-wider shrink-0 select-none">{clockDate}</span>
-            </div>
+            {/* Live Indian Ticking Clock & Date Widget - Only active/shown on the first page as requested */}
+            {activeTab === "home" && (
+              <div className="hidden md:flex flex-col items-end px-3.5 py-1 bg-zinc-950/60 border border-white/5 rounded-xl text-right animate-fadeIn">
+                <span className="text-[10px] font-black text-[#FF9933] tracking-widest font-mono shrink-0 select-none animate-pulse">{clockTime}</span>
+                <span className="text-[8px] font-semibold text-zinc-400 uppercase tracking-wider shrink-0 select-none">{clockDate}</span>
+              </div>
+            )}
 
             <select 
               value={language}
@@ -1053,168 +1055,6 @@ Date: ${dateStr}`;
       {/* CORE CONTENT WRAPPER */}
       <main className="max-w-7xl mx-auto px-4 py-8 z-10 relative">
 
-        {/* 🇮🇳 UNIFIED BILINGUAL & MULTI-ROLE ADMINISTRATIVE CONTROL CONSOLE */}
-        <div className="bg-zinc-950/85 border border-white/10 rounded-3xl p-5 mb-8 shadow-2xl backdrop-blur-md relative z-20 space-y-4" id="unified-control-console">
-          
-          {/* Saffron and Green line bar accent representing high-fidelity national aesthetics */}
-          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#FF9933] via-white to-[#138808] rounded-t-3xl" />
-
-          <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 pt-1">
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="flex h-2 w-2 relative">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                </span>
-                <h2 className="text-xs font-mono font-black uppercase tracking-widest text-[#FF9933] flex items-center gap-1.5">
-                  🇮🇳 Unified Portal Director
-                </h2>
-              </div>
-              <p className="text-[10px] text-zinc-400 mt-1 font-sans">
-                {language === "Hindi" 
-                  ? "भाषा संरेखण, वॉयस आउटपुट नियंत्रण, और 'ai', 'haqqdar1', एवं 'admin' भूमिकाओं तक सीधी पहुंच।"
-                  : "Syncing languages, voice synthesis engines, and instant bypass accounts for AI, Haqqdar, & Administrator roles across tabs."
-                }
-              </p>
-            </div>
-
-            {/* Language Selection Buttons - Changes globally across all screens and tabs */}
-            <div className="flex items-center gap-2 bg-zinc-900/80 p-1.5 rounded-xl border border-white/5">
-              <span className="text-[10px] uppercase font-bold text-zinc-500 px-1 font-mono">{language === "Hindi" ? "भाषा:" : "Lang:"}</span>
-              <button
-                type="button"
-                onClick={() => {
-                  setLanguage("English");
-                  triggerFeedback("Language set to English");
-                }}
-                className={`px-3 py-1 rounded-lg text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${
-                  language === "English" 
-                    ? "bg-white text-black font-extrabold shadow" 
-                    : "text-zinc-400 hover:text-white"
-                }`}
-              >
-                🇺🇸 EN
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setLanguage("Hindi");
-                  triggerFeedback("भाषा हिंदी में बदल दी गई है");
-                }}
-                className={`px-3 py-1 rounded-lg text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${
-                  language === "Hindi" 
-                    ? "bg-[#FF9933] text-black font-extrabold shadow" 
-                    : "text-zinc-400 hover:text-white"
-                }`}
-              >
-                🇮🇳 हिन्दी
-              </button>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 border-t border-white/5 pt-4">
-            
-            {/* Multi-role instant switcher widgets - Fulfils: every tab has direct login for ai, haqqdar1, and admin */}
-            <div className="lg:col-span-8 space-y-2">
-              <span className="text-[10px] uppercase font-bold text-zinc-500 font-mono block">
-                🔑 {language === "Hindi" ? "त्वरित लॉगिन अनुकरण (ROLE ACCOUNTS):" : "SIMULATE DIRECT PORTAL BYPASS (ROLE ACCOUNTS):"}
-              </span>
-              <div className="flex flex-wrap items-center gap-2">
-                {[
-                  { name: "ai", label: "🤖 AI Operator", color: "border-blue-500/40 text-blue-300 hover:bg-blue-500/10" },
-                  { name: "haqqdar1", label: "🎯 Haqqdar Officer", color: "border-[#138808]/40 text-[#22C55E] hover:bg-[#138808]/10" },
-                  { name: "admin", label: "👑 Administrator", color: "border-amber-500/40 text-amber-300 hover:bg-amber-500/10" }
-                ].map(role => {
-                  const isActive = currentRole === role.name;
-                  return (
-                    <button
-                      key={role.name}
-                      type="button"
-                      onClick={() => handleQuickLogin(role.name)}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-all flex items-center gap-1.5 cursor-pointer hover:scale-105 active:scale-95 ${
-                        isActive 
-                          ? "bg-white text-black border-white font-black shadow-md ring-2 ring-amber-500/40" 
-                          : role.color
-                      }`}
-                    >
-                      <span>{isActive ? "✓" : "⚡"}</span>
-                      <span>{role.label}</span>
-                    </button>
-                  );
-                })}
-
-                {currentRole !== "guest" && (
-                  <button
-                    type="button"
-                    onClick={handleQuickLogout}
-                    className="px-2.5 py-1.5 rounded-xl text-xs font-bold border border-red-500/40 text-red-400 hover:bg-red-500/10 transition-all flex items-center justify-center cursor-pointer ml-auto"
-                  >
-                    <span>Logout</span>
-                  </button>
-                )}
-              </div>
-            </div>
-
-            {/* Voice synth instant click off switch - Fulfils: voice should doesnt work if clicked off immediately */}
-            <div className="lg:col-span-4 flex flex-col justify-center lg:items-end">
-              <span className="text-[10px] uppercase font-bold text-zinc-500 font-mono block mb-2">
-                🔊 {language === "Hindi" ? "ऑटो-पार्क गाइड वॉयस:" : "BILINGUAL AUDIOPHONE MODULE:"}
-              </span>
-              <button 
-                type="button"
-                onClick={() => {
-                  const nextState = !chatSpeechEnabled;
-                  setChatSpeechEnabled(nextState);
-                  if (!nextState) {
-                    if ('speechSynthesis' in window) {
-                      window.speechSynthesis.cancel();
-                    }
-                    triggerFeedback(language === "Hindi" ? "ध्वनि सिंथेसाइज़र अक्षम" : "Speech synthesis muted.");
-                  } else {
-                    triggerFeedback(language === "Hindi" ? "ध्वनि सिंथेसाइज़र सक्रिय" : "Audio read-aloud active.");
-                    speakText("नमस्कार! Read-aloud voice support has been activated.");
-                  }
-                }}
-                id="header-global-speech-mute"
-                className={`px-4 py-1.5 rounded-xl border text-xs font-bold uppercase transition-all flex items-center justify-center gap-2 cursor-pointer w-full lg:w-auto ${
-                  chatSpeechEnabled 
-                    ? "bg-emerald-500 text-black border-emerald-500 font-extrabold" 
-                    : "border-red-500/30 bg-red-950/10 text-red-400 hover:bg-red-950/35"
-                }`}
-              >
-                {chatSpeechEnabled ? (
-                  <>
-                    <Volume2 className="w-4 h-4 shrink-0" />
-                    <span>{language === "Hindi" ? "आवाज चालू" : "Voice Output ON"}</span>
-                  </>
-                ) : (
-                  <>
-                    <VolumeX className="w-4 h-4 shrink-0" />
-                    <span>{language === "Hindi" ? "आवाज बंद" : "Voice Output OFF"}</span>
-                  </>
-                )}
-              </button>
-            </div>
-
-          </div>
-
-          {/* Connected Session Indicator */}
-          <div className="flex items-center justify-between text-[9px] font-mono border-t border-white/5 pt-3 text-zinc-500">
-            <div>
-              {language === "Hindi" ? "सक्रिय क्रेडेंशियल:" : "Active Authorized Session:"}{" "}
-              <span className="font-extrabold text-white bg-white/5 px-2 py-0.5 rounded-md">
-                {currentRole === "guest" 
-                  ? "🟢 Public Guest Profile" 
-                  : `🔒 Role: ${currentRole.toUpperCase()}`}
-              </span>
-            </div>
-            <div className="hidden sm:inline">
-              SECURE DESK LATENCY: <span className="text-emerald-400 font-bold">1ms</span> (DIRECT LOCAL LOOP)
-            </div>
-          </div>
-
-        </div>
-
         {/* 🇮🇳 DUAL-LAYER NATIONAL EMBASSY WRAPPER: Generates Indian Flag Background on EVERY tab seamlessly */}
         <div className="bg-zinc-950/20 border border-white/5 rounded-3xl p-4 sm:p-6 min-h-[400px] mb-8 shadow-2xl relative overflow-hidden" id="national-tab-stage">
           <IndianFlagBackground />
@@ -1272,7 +1112,7 @@ Date: ${dateStr}`;
                   </div>
 
                   {/* Elegant typography header from mockup */}
-                  <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white leading-tight">
+                  <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white leading-tight animate-entrance-headline">
                     {language === "Hindi" ? "आपका अधिकार।" : "Your Rights."}<br />
                     {language === "Hindi" ? "आपका लाभ।" : "Your Benefits."}<br />
                     <span className="bg-gradient-to-r from-[#FF9933] via-white to-[#138808] bg-clip-text text-transparent">
@@ -1317,7 +1157,7 @@ Date: ${dateStr}`;
 
               {/* RIGHT COLUMN: GORGEOUS CITIZEN READINESS SCORE CARD (Exactly as shown in Mockup Screenshot) */}
               <div className="lg:col-span-5" id="hero-dashboard-col">
-                <div className="glass-panel p-6 rounded-3xl border-white/10 bg-[#07070a]/90 shadow-2xl relative overflow-hidden space-y-5" id="citizen-readiness-card">
+                <div className="glass-panel p-6 rounded-3xl border-white/10 bg-[#07070a]/90 shadow-2xl relative overflow-hidden space-y-5 animate-entrance-card" id="citizen-readiness-card">
                   {/* Subtle India Map Outline Watermark behind Card */}
                   <div className="absolute inset-0 opacity-[0.035] pointer-events-none bg-[url('https://upload.wikimedia.org/wikipedia/commons/e/ec/Map_of_India.svg')] bg-no-repeat bg-contain bg-center scale-95" />
 
@@ -3741,6 +3581,18 @@ ${activeCrisis.roadmap.map(r => `Step ${r.step}: ${r.title_en} at ${r.office}\n�
             <div className="flex flex-col gap-2 text-[#FF9933]">
               <button onClick={() => { setActiveTab("appeals"); window.scrollTo(0,0); }} className="hover:text-white text-left font-bold font-serif text-xs">RTI Letter Studio →</button>
               <button onClick={() => { setActiveTab("northeast"); window.scrollTo(0,0); }} className="hover:text-white text-left font-bold font-serif text-xs">Northeast State Directories →</button>
+              <div className="pt-2 border-t border-white/5 mt-1">
+                <button 
+                  onClick={() => {
+                    setShowAdminPanel(true);
+                    triggerFeedback(language === "Hindi" ? "प्रशासकीय सुरक्षा लॉक स्क्रीन खोली जा रही है..." : "Opening secure administrative entry lockscreen...");
+                  }} 
+                  className="hover:text-white text-left font-bold font-mono text-[9px] bg-zinc-950/80 hover:bg-zinc-900 border border-white/10 px-2 py-1.5 rounded-lg flex items-center gap-1 text-[#FF9933] transition-colors w-fit shadow-md cursor-pointer uppercase tracking-wider"
+                >
+                  <Lock className="w-3 h-3 text-[#FF9933] shrink-0" />
+                  <span>{language === "Hindi" ? "प्रशासक लॉगिन" : "Admin Login"}</span>
+                </button>
+              </div>
             </div>
           </div>
 

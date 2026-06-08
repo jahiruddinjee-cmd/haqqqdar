@@ -279,6 +279,196 @@ if (API_KEY && API_KEY !== "MY_GEMINI_API_KEY") {
   console.log("No valid GEMINI_API_KEY found in process.env. Falling back to robust rule-based assistant.");
 }
 
+// A dynamic local fallback action plan generator for Life Navigator (AWAAZ hackathon)
+function generateFallbackNavigatorPlan(selected_event: string, state: string, income: string, land: string): any {
+  const isLand = land === "Yes";
+  const maps: Record<string, any> = {
+    "Flood / Natural Disaster": {
+      summary: `Natural disaster relief recovery pathways for residents of ${state}. Priority is registering basic damage certification.`,
+      urgent_steps: [
+        { step: 1, action: "Notify your Block Development Officer (BDO) or Gram Panchayat of immediate household item loss.", deadline: "within 48 hours", office: "Circle Office / Panchayat Secretariat" },
+        { step: 2, action: "Apply for physical property structural verification and crop damage inspections.", deadline: "within 1 week", office: "Revenue Circle / Patwari Assistant" },
+        { step: 3, action: "Claim direct state SDRF household emergency relief funds and grain allocations.", deadline: "within 1 month", office: "Food & Civil Supplies Desk" }
+      ],
+      schemes: [
+        { name: "SDRF Disaster Compensation Fund", amount: "₹15,000", how_to_apply: "Submit asset and crops damage photographs to the local Circle Officer.", documents: ["Aadhaar Card", "Bank Account Details", "Land Ownership Receipt", "Gram Seva Inspection Certificate"] },
+        ...(isLand ? [{ name: "PM Fasal Bima Yojana (Disaster Clause)", amount: "₹25,000", how_to_apply: "Submit localized crop failure claim on national insurance portal within 72 hrs.", documents: ["KCC Details", "Land Possession Certificate", "Sowing Self-Declaration"] }] : [])
+      ],
+      documents_needed: ["Aadhaar Card", "Bank Passbook Copy", "Land Possession Proof", "Disaster Force Certificate"],
+      helpline: "1078 (National Disaster Management Authority Helpline)"
+    },
+    "Death in Family": {
+      summary: `Accessing immediate state social security benefits, survivor pensions, and final rites support in ${state}.`,
+      urgent_steps: [
+        { step: 1, action: "Register death with the local registrar to secure the official legal Death Certificate.", deadline: "within 48 hours", office: "Panchayat Office / Municipal Corporation" },
+        { step: 2, action: "Apply for the National Family Benefit Scheme (NFBS) one-time primary breadwinner assistance.", deadline: "within 1 week", office: "Block Development Office (BDO)" },
+        { step: 3, action: "Initiate family social security pension or National Pension Scheme survivor transfers.", deadline: "within 1 month", office: "Social Welfare Department Desk" }
+      ],
+      schemes: [
+        { name: "National Family Benefit Scheme (NFBS)", amount: "₹20,000", how_to_apply: "Submit death proof and BPL card to the Social Welfare Inspector at BDO Office.", documents: ["Death Certificate", "BPL Ration Card", "Aadhaar Card of Applicant"] },
+        { name: "PM Jeevan Jyoti Bima Yojana (Claim)", amount: "₹2,00,000", how_to_apply: "Contact the bank where the deceased held their savings account to submit PMJJBY insurance claim.", documents: ["Claim Form", "Aadhaar of Deceased", "Nominee Bank Details"] }
+      ],
+      documents_needed: ["Death Certificate", "Aadhaar of Nominee", "BPL Ration Card", "Income Certificate"],
+      helpline: "1800-11-2356 (Pension and Social Security Desk)"
+    },
+    "Crop Failure / Drought": {
+      summary: `Agrarian emergency claiming crop loss insurance and accessing subsidized inputs in ${state}.`,
+      urgent_steps: [
+        { step: 1, action: "Notify insurance representative and submit localized crop damage reporting.", deadline: "within 48 hours", office: "District Agriculture Officer / Insurance Desk" },
+        { step: 2, action: "Initiate Patwari validation and area crop block cutting survey.", deadline: "within 1 week", office: "Revenue Patwari Circle / Lekhpal" },
+        { step: 3, action: "Apply for supplementary manual field labor hours under MGNREGS.", deadline: "within 1 month", office: "Gram Panchayat Executive" }
+      ],
+      schemes: [
+        { name: "PM Fasal Bima Yojana (Crop Loss Claim)", amount: "₹35,000", how_to_apply: "Submit localized crop failure form listing block-level drought on national PMC portal.", documents: ["KCC Details", "Land Record copy", "Sowing Certification"] },
+        { name: "PM Kisan Samman Nidhi inputs", amount: "₹2,000", how_to_apply: "Update PM-Kisan bank mapping to claim immediate seasonal crop booster installment.", documents: ["Aadhaar Card", "Land Khatauni Receipt", "Aadhaar-Seeded Bank mandate"] }
+      ],
+      documents_needed: ["Land Holding Record (Khatauni)", "Sowing Declaration", "Bank Passbook Copy", "Aadhaar Card"],
+      helpline: "1800-180-1551 (Kisan Call Centre)"
+    },
+    "Disability": {
+      summary: `Securing official UDID cards, assistive devices, and state disability pension allowances in ${state}.`,
+      urgent_steps: [
+        { step: 1, action: "Obtain official physical / mental disability evaluation certificate from CMO.", deadline: "within 48 hours", office: "Chief Medical Officer (CMO) at District Hospital" },
+        { step: 2, action: "Register online for federal Unique Disability Identity (UDID) Card.", deadline: "within 1 week", office: "UDID Swavlamban E-Portal" },
+        { step: 3, action: "Apply for recurring Monthly Divyangjan social security state pension.", deadline: "within 1 month", office: "Civil Social Welfare Officer" }
+      ],
+      schemes: [
+        { name: "Indira Gandhi National Disability Pension", amount: "₹1,500 / month", how_to_apply: "Submit your certified 40%+ disability UDID card to Panchayat or Block Office.", documents: ["UDID Card", "Income Certificate", "Residence Proof"] },
+        { name: "ADIP Assistance Scheme", amount: "Free assistive devices", how_to_apply: "Register under ADIP camp lists for wheelchairs, calipers, or digital hearing aids.", documents: ["CMO Board Evaluation", "Income Certificate under ₹3 Lakhs"] }
+      ],
+      documents_needed: ["UDID Card / Disability Certificate", "Aadhaar Card", "Income Certificate", "Passport Photos"],
+      helpline: "1800-11-0180 (Ministry of Social Justice Helpline)"
+    },
+    "Job Loss / Migration": {
+      summary: `Alternative livelihood registration, wage guarantees, and labor insurance in ${state}.`,
+      urgent_steps: [
+        { step: 1, action: "Apply for a formal MGNREGS Job Card to secure localized manual daily wage labor.", deadline: "within 48 hours", office: "Gram Panchayat Executive Desk" },
+        { step: 2, action: "Register on national e-Shram portal to lock in government accidental death benefits.", deadline: "within 1 week", office: "Common Service Center (CSC)" },
+        { step: 3, action: "Join PMKVY vocational training under state-supervised skill alignment directories.", deadline: "within 1 month", office: "Regional Skill Center" }
+      ],
+      schemes: [
+        { name: "MGNREGS Direct Wages", amount: "₹260 / day", how_to_apply: "Submit job card demand for physical labor at local panchayat water conservancy structures.", documents: ["Job Card Application", "Aadhaar Card", "Bank Account Info"] },
+        { name: "Haqqdar Emergency Migration Grant", amount: "₹10,500", how_to_apply: "Submit job lay-off proof to receive transit support for returning migrant families.", documents: ["Employer Discharge Note", "State Registration Card"] }
+      ],
+      documents_needed: ["Aadhaar Card", "Active Mobile Link", "Bank Passbook Copy", "Job Card Copy"],
+      helpline: "14434 (e-Shram National Help Desk)"
+    },
+    "New Baby / Pregnancy": {
+      summary: `Maternity cash aid and nutrition tracking for mother and newborn in ${state}.`,
+      urgent_steps: [
+        { step: 1, action: "Register birth and obtain Mother and Child Protection (MCP) card.", deadline: "within 48 hours", office: "Anganwadi Worker / ASHA Officer" },
+        { step: 2, action: "Register birth certificate online with regional civic desk.", deadline: "within 1 week", office: "Panchayat / Municipal Health Registry" },
+        { step: 3, action: "Lodge maternal nutrition benefit forms for direct cash back.", deadline: "within 1 month", office: "Anganwadi Center / Gram ICDS Desk" }
+      ],
+      schemes: [
+        { name: "Pradhan Mantri Matru Vandana Yojana (PMMVY)", amount: "₹5,000", how_to_apply: "Submit pregnancy cycle checkoffs with MCP card via national PMMVY login.", documents: ["ASHA MCP Card", "Bank Passbook", "Aadhaar Cards of Parents"] },
+        { name: "Janani Suraksha Yojana (JSY)", amount: "₹1,400", how_to_apply: "Conduct delivery in public healthcare facility for automatic institutional JSY credit.", documents: ["Discharge Slip", "Aadhaar Card"] }
+      ],
+      documents_needed: ["MCP Card / Green Card", "Aadhaar of Husband & Wife", "Joint Bank Passbook", "Hospital Birth Certificate"],
+      helpline: "1056 (National Health Portal Emergency Support)"
+    },
+    "Land Dispute": {
+      summary: `Securing certified cadastre survey sheets, mutation partitions, and free public legal aid in ${state}.`,
+      urgent_steps: [
+        { step: 1, action: "Obtain certified RoR (Record of Rights) or Jamabandi reflecting exact holdings.", deadline: "within 48 hours", office: "Revenue Circle Office" },
+        { step: 2, action: "Lodge written property mutation challenge before the Sub-Divisional Magistrate.", deadline: "within 1 week", office: "SDM Court / Circle Officer" },
+        { step: 3, action: "Apply for fully subsidized free state legal counsel listing.", deadline: "within 1 month", office: "District Legal Services Authority (DLSA)" }
+      ],
+      schemes: [
+        { name: "SVAMITVA Property Card System", amount: "Statutory Property Card", how_to_apply: "Validate drone-survey village boundary coordinates with the Revenue Secretary.", documents: ["Chaukidari Tax Receipt", "Aadhaar Card", "Local Panchayat No-Objection"] },
+        { name: "NALSA Free Legal Defense", amount: "Free Legal Advocacy", how_to_apply: "Submit legal representation request declaring yearly income lower than ₹3 Lakhs.", documents: ["Income Certificate", "Copy of Land Dispute Suit"] }
+      ],
+      documents_needed: ["Certified Land Records (Jamabandi)", "Boundary Layout Map", "Income Certificate", "Aadhaar Card"],
+      helpline: "15100 (National Legal Services Authority Helpline)"
+    },
+    "House Fire / Property Loss": {
+      summary: `Acquiring Fire Marshall damage summaries and applying for emergency housing grants in ${state}.`,
+      urgent_steps: [
+        { step: 1, action: "Procure the official Fire Damage Incident Certificate (Lekhpal verification).", deadline: "within 48 hours", office: "Fire Station / Lekhpal Patwari Desk" },
+        { step: 2, action: "Apply for immediate local calamity relief vouchers for food, garments, and temporary tenting.", deadline: "within 1 week", office: "Revenue Circle Inspector / Panchayat Team" },
+        { step: 3, action: "Apply for high-priority housing assistance under PMAY-G special calamity index.", deadline: "within 1 month", office: "Block Development Officer (BDO)" }
+      ],
+      schemes: [
+        { name: "PM Awas Yojana Gramin (PMAY-G Calamity Quote)", amount: "₹1,20,000", how_to_apply: "Submit fire loss certificate to get fast-tracked inside national SECC brick housing queue.", documents: ["Fire Damage Certificate", "Aadhaar Card", "Land Holding Proof"] },
+        { name: "District Calamity Emergency Fund", amount: "₹12,000", how_to_apply: "Present Lekhpal verification of physical structural damage to receive immediate cash repairs assistance.", documents: ["Spelling Validation Paper", "Bank Passbook Copy"] }
+      ],
+      documents_needed: ["Fire Incident Report / Damage Certificate", "Aadhaar Card", "Active Bank Passbook", "Property Loss Photos"],
+      helpline: "101 (Emergency Fire Rescue Services)"
+    }
+  };
+
+  const matchedKey = Object.keys(maps).find(key => 
+    selected_event.toLowerCase().includes(key.toLowerCase().split("/")[0].trim())
+  ) || "Flood / Natural Disaster";
+
+  return maps[matchedKey];
+}
+
+// REST API for Life Navigator Action Plan Roadmap (AWAAZ hackathon)
+app.post("/api/life-navigator", async (req: Request, res: Response) => {
+  const { selected_event, state = "Assam", income = "Under ₹1L", land = "No" } = req.body;
+
+  if (!selected_event) {
+    res.status(400).json({ error: "Missing selected_event parameter in requisition body." });
+    return;
+  }
+
+  // Fallback if AI client is missing or offline, keeping portal resilient
+  if (!ai) {
+    const fallbackPlan = generateFallbackNavigatorPlan(selected_event, state, income, land);
+    res.json(fallbackPlan);
+    return;
+  }
+
+  try {
+    const promptText = `You are a government scheme expert for rural India. 
+A citizen has faced: ${selected_event}
+Their state: ${state}, Income: ${income}, Land ownership: ${land}
+
+Generate a crisis action plan in this EXACT JSON format:
+{
+  "summary": "2-line human summary of what they should do",
+  "urgent_steps": [
+    {"step": 1, "action": "...", "deadline": "within 48 hours", "office": "..."},
+    {"step": 2, "action": "...", "deadline": "within 1 week", "office": "..."},
+    {"step": 3, "action": "...", "deadline": "within 1 month", "office": "..."}
+  ],
+  "schemes": [
+    {"name": "...", "amount": "₹...", "how_to_apply": "...", "documents": ["...", "..."]}
+  ],
+  "documents_needed": ["...", "..."],
+  "helpline": "1800-XXX-XXXX"
+}
+Return ONLY the JSON. No markdown. No explanation.`;
+
+    const response = await ai.models.generateContent({
+      model: "gemini-3.5-flash",
+      contents: [
+        { role: "user", parts: [{ text: promptText }] }
+      ],
+      config: {
+        responseMimeType: "application/json",
+        temperature: 0.2, // structured output
+      }
+    });
+
+    const aiText = response.text || "";
+    let parsedPlan: any;
+    try {
+      parsedPlan = JSON.parse(aiText.trim());
+    } catch (_) {
+      const cleanText = aiText.replace(/```json/i, "").replace(/```/g, "").trim();
+      parsedPlan = JSON.parse(cleanText);
+    }
+    res.json(parsedPlan);
+
+  } catch (error) {
+    console.error("Gemini Failure for Life Navigator route:", error);
+    const fallbackPlan = generateFallbackNavigatorPlan(selected_event, state, income, land);
+    res.json(fallbackPlan);
+  }
+});
+
 // REST API for Haqqdar Citizen Assistant (Server-Side proxy)
 app.post("/api/chat", async (req: Request, res: Response) => {
   const { message, previousMessages = [], language = "English" } = req.body;

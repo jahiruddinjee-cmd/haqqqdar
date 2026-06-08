@@ -156,5 +156,27 @@ html {
   animation: delicate-pulse 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
+/* Gentle on-load entrance animations for headline and score card */
+@keyframes trigger-entrance {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-entrance-headline {
+  animation: trigger-entrance 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-entrance-card {
+  opacity: 0;
+  animation: trigger-entrance 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+}
+
+
 
 
