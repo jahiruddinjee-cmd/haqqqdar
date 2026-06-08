@@ -10,7 +10,7 @@ import {
 import { 
   Search, Shield, CheckCircle2, ChevronRight, Download, Copy, AlertTriangle, 
   PhoneCall, FileText, UserCheck, EyeOff, X, Volume2, VolumeX, Menu, Activity, Info, Landmark, HelpCircle, ArrowRight,
-  Sprout, Globe, Clock, Compass, Users, Briefcase, GraduationCap, Building2, User, Flame, AlertCircle, Home, Lock,
+  Sprout, Globe, Clock, Compass, Users, Briefcase, GraduationCap, Building2, User, Flame, AlertCircle, Home, Lock, Calendar,
   Sparkles, CheckSquare, Clipboard, AlertOctagon
 } from "lucide-react";
 import {
@@ -883,8 +883,8 @@ Date: ${dateStr}`;
         <div className="max-w-7xl mx-auto py-3 flex items-center justify-between">
           
           {/* Logo brand & tagline with increased scale */}
-          <div className="flex items-center gap-3 cursor-pointer select-none" onClick={() => setActiveTab("home")}>
-            <div className="w-12 h-12 flex items-center justify-center">
+          <div className="flex items-center gap-2 cursor-pointer select-none" onClick={() => setActiveTab("home")}>
+            <div className="w-11 h-11 flex items-center justify-center">
               {/* High-fidelity Haqqdar Logo Emblem Symbol matching user image */}
               <svg viewBox="0 0 100 100" className="w-full h-full select-none" referrerPolicy="no-referrer">
                 <defs>
@@ -938,11 +938,11 @@ Date: ${dateStr}`;
               </svg>
             </div>
             <div>
-              <div className="flex items-center gap-1.5 leading-none">
-                <span className="font-sans font-black text-lg md:text-xl tracking-widest text-saffron uppercase">HAQQDAR</span>
-                <span className="text-[7.5px] font-extrabold bg-amber-500/10 text-saffron px-1.5 py-0.5 rounded border border-amber-500/20 tracking-wider">CITIZEN PORTAL</span>
+              <div className="flex items-center gap-1 leading-none">
+                <span className="font-sans font-black text-sm sm:text-base md:text-lg tracking-widest text-saffron uppercase">HAQQDAR</span>
+                <span className="text-[6.5px] sm:text-[7px] font-extrabold bg-amber-500/10 text-saffron px-1 py-0.5 rounded border border-amber-500/20 tracking-wider">CITIZEN PORTAL</span>
               </div>
-              <p className="text-[8px] text-gray-400 mt-0.5 uppercase font-semibold tracking-wider">Democratic Inclusion • Verified Government Directory</p>
+              <p className="text-[7.5px] text-gray-400 mt-0.5 uppercase font-semibold tracking-wider">Democratic Inclusion • Verified Government Directory</p>
             </div>
           </div>
 
@@ -965,52 +965,73 @@ Date: ${dateStr}`;
                   key={tab.id}
                   id={`nav-tab-${tab.id}`}
                   onClick={() => { setActiveTab(tab.id); setMobileMenuOpen(false); }}
-                  className={`flex items-center gap-1 px-2.5 py-2 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all duration-150 ${
+                  className={`flex items-center gap-1 px-1.5 py-1.5 sm:px-2 rounded-lg text-[9px] sm:text-[10px] font-bold uppercase tracking-wider transition-all duration-150 ${
                     activeTab === tab.id 
                       ? "bg-gradient-to-r from-[#FF9933]/20 to-transparent text-[#FF9933] border border-[#FF9933]/40 shadow-sm" 
                       : "text-gray-300 hover:text-white hover:bg-white/5 border border-transparent"
                   }`}
                 >
-                  <Icon className="w-3.5 h-3.5 shrink-0" />
+                  <Icon className="w-3 h-3 shrink-0" />
                   {t("tab." + tab.id)}
                 </button>
               );
             })}
           </nav>
 
-          {/* Accessibility controls, Language Dropdown & Mini Status Dates */}
-          <div className="flex items-center gap-3">
-            {/* Live Ticking Indian Clock & Date (Extremely compact and neat as requested) */}
-            <div className="flex flex-col items-end text-right border-r border-white/10 pr-2.5 font-mono select-none">
-              <span className="text-[10px] font-black text-[#FF9933] tracking-widest leading-none">{clockTime}</span>
-              <span className="text-[7.5px] text-zinc-500 font-bold uppercase tracking-wider mt-0.5 leading-none">{clockDate}</span>
-            </div>
+          {/* Accessibility controls, Language Dropdown & Mobile Menu Trigger */}
+          <div className="flex items-center gap-1.5">
+            <select 
+              value={language}
+              id="header-lang-select"
+              onChange={(e) => {
+                setLanguage(e.target.value);
+                triggerFeedback(e.target.value === "Hindi" ? "भाषा हिंदी में बदल दी गई है" : "Language set to English");
+              }}
+              className="bg-black border border-white/10 text-gray-300 text-[9px] sm:text-[10px] rounded px-1.5 py-1 font-bold outline-none cursor-pointer focus:border-amber-500 hover:bg-zinc-900 hover:text-white transition-colors"
+            >
+              <option value="English">English</option>
+              <option value="Hindi">हिन्दी</option>
+            </select>
 
-            <div className="flex items-center gap-1.5">
-              <select 
-                value={language}
-                id="header-lang-select"
-                onChange={(e) => {
-                  setLanguage(e.target.value);
-                  triggerFeedback(e.target.value === "Hindi" ? "भाषा हिंदी में बदल दी गई है" : "Language set to English");
-                }}
-                className="bg-black border border-white/10 text-gray-300 text-[9px] sm:text-[10px] rounded px-1.5 py-1 font-bold outline-none cursor-pointer focus:border-amber-500 hover:bg-zinc-900 hover:text-white transition-colors"
-              >
-                <option value="English">English</option>
-                <option value="Hindi">हिन्दी</option>
-              </select>
-
-              {/* Mobile menu trigger */}
-              <button 
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                id="mobile-menu-trigger"
-                className="lg:hidden p-1.5 rounded-lg border border-[#ffffff]/15 text-gray-300 hover:bg-white/5 cursor-pointer"
-              >
-                <Menu className="w-3.5 h-3.5" />
-              </button>
-            </div>
+            {/* Mobile menu trigger */}
+            <button 
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              id="mobile-menu-trigger"
+              className="lg:hidden p-1.5 rounded-lg border border-[#ffffff]/15 text-gray-300 hover:bg-white/5 cursor-pointer"
+            >
+              <Menu className="w-3.5 h-3.5" />
+            </button>
           </div>
 
+        </div>
+
+        {/* HIGH-FIDELITY BHARAT STATUS BAR SUB-BAR (Placed directly under the core header in its own horizontal slot) */}
+        <div className="max-w-7xl mx-auto py-1.5 border-t border-white/5 flex flex-wrap items-center justify-between text-[9px] text-zinc-400 font-mono tracking-wide">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+            <span className="flex items-center gap-1 text-emerald-450">
+              <CheckCircle2 className="w-3 h-3 text-emerald-500 shrink-0" />
+              <span>{language === "Hindi" ? "सत्यापित। विश्वसनीय। भारत के प्रत्येक नागरिक के लिए।" : "Verified. Trusted. For Every Citizen of Bharat."}</span>
+            </span>
+            <span className="flex items-center gap-1">
+              <span>🇮🇳</span>
+              <span>{language === "Hindi" ? "भारत" : "India"}</span>
+            </span>
+            <span className="flex items-center gap-1 text-white">
+              <Clock className="w-3 h-3 text-[#FF9933] shrink-0" />
+              <span className="font-semibold">{clockTime}</span>
+            </span>
+            <span className="flex items-center gap-1">
+              <Calendar className="w-3 h-3 text-zinc-500 shrink-0" />
+              <span>{clockDate}</span>
+            </span>
+            <span className="flex items-center gap-1 text-emerald-400">
+              <span className="flex h-1 w-1 relative">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-1 w-1 bg-emerald-500"></span>
+              </span>
+              <span>{language === "Hindi" ? "प्रणाली सक्रिय" : "Systems Online"}</span>
+            </span>
+          </div>
         </div>
 
         {/* Mobile menu navigation drawer */}
