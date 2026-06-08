@@ -878,45 +878,7 @@ Date: ${dateStr}`;
 
       {/* HEADER NAVIGATING BAR (Pure Apple Developer-style deep black with high-contrast elements) */}
       <header className="sticky top-0 z-[100] bg-[#000000]/95 backdrop-blur-md border-b border-white/10 px-4">
-        {/* HIGH-FIDELITY BHARAT STATUS BAR */}
-        <div className="max-w-7xl mx-auto py-2 flex flex-wrap items-center justify-between border-b border-white/5 text-[10px] text-zinc-400 font-mono tracking-wide">
-          <div className="flex flex-wrap items-center gap-3 sm:gap-5">
-            <span className="flex items-center gap-1.5 text-emerald-400">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-              <span>100% {language === "Hindi" ? "सत्यापित स्रोत" : "Verified Sources"}</span>
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span>🇮🇳</span>
-              <span>{language === "Hindi" ? "भारत" : "India"}</span>
-            </span>
-            <span className="flex items-center gap-1.5 text-white">
-              <Clock className="w-3.5 h-3.5 text-[#FF9933] shrink-0" />
-              <span className="font-semibold animate-pulse">{clockTime}</span>
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span>📅</span>
-              <span>{clockDate}</span>
-            </span>
-            <span className="flex items-center gap-1.5 text-emerald-400">
-              <span className="flex h-1.5 w-1.5 relative">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
-              </span>
-              <span>{language === "Hindi" ? "प्रणाली सक्रिय" : "Systems Online"}</span>
-            </span>
-          </div>
 
-          <div className="hidden sm:flex items-center gap-4">
-            <span className="flex items-center gap-1 hover:text-white cursor-pointer transition-colors">
-              <span>🌐</span>
-              <span className="uppercase font-bold">{language}</span>
-            </span>
-            <span className="flex items-center gap-1 bg-zinc-900 border border-white/10 rounded-full px-2 py-0.5 text-[9px] text-[#FF9933] font-bold">
-              <User className="w-2.5 h-2.5 shrink-0" />
-              <span>{language === "Hindi" ? "नागरिक" : "Citizen"}</span>
-            </span>
-          </div>
-        </div>
 
         <div className="max-w-7xl mx-auto py-3 flex items-center justify-between">
           
