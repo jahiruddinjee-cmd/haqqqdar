@@ -23,6 +23,7 @@ import { INTERESTING_FACTS_LIST } from "./data/interestingFacts";
 import { AdminPanel } from "./components/AdminPanel";
 import { DocumentIntelligence } from "./components/DocumentIntelligence";
 import { LifeNavigatorHub } from "./components/LifeNavigatorHub";
+import { BharatCareerNavigator } from "./components/BharatCareerNavigator";
 import { LIFE_CRISIS_PLAYBOOKS, CrisisPlaybook } from "./data/lifeCrisisPlaybooks";
 
 const IndianFlagBackground: React.FC = () => {
@@ -906,13 +907,6 @@ Date: ${dateStr}`;
           </div>
 
           <div className="hidden sm:flex items-center gap-4">
-            <span className="flex items-center gap-1 hover:text-white cursor-pointer transition-colors relative">
-              <span className="relative inline-block mr-0.5">
-                <span>🔔</span>
-                <span className="absolute -top-1 -right-1 bg-red-600 text-white font-sans text-[7px] w-3.5 h-3.5 flex items-center justify-center rounded-full font-black animate-bounce">3</span>
-              </span>
-              <span>{language === "Hindi" ? "3 सूचनाएं" : "3 Notifications"}</span>
-            </span>
             <span className="flex items-center gap-1 hover:text-white cursor-pointer transition-colors">
               <span>🌐</span>
               <span className="uppercase font-bold">{language}</span>
@@ -1025,15 +1019,6 @@ Date: ${dateStr}`;
           {/* Accessibility controls and Language Dropdown */}
           <div className="flex items-center gap-1.5">
             
-            {/* Live Indian Ticking Clock & Date Widget - High legibility on all tabs as requested */}
-            <div className="hidden sm:flex items-center gap-2 bg-zinc-950/80 border border-white/10 rounded-xl px-3 py-1.5 text-right animate-fadeIn font-mono">
-              <Clock className="w-3.5 h-3.5 text-[#FF9933] shrink-0 animate-pulse" />
-              <div className="flex flex-col items-end">
-                <span className="text-xs font-black text-[#FF9933] tracking-widest leading-none" id="header-live-time">{clockTime}</span>
-                <span className="text-[8px] font-bold text-zinc-400 uppercase tracking-widest leading-none mt-0.5" id="header-live-date">{clockDate}</span>
-              </div>
-            </div>
-
             <select 
               value={language}
               id="header-lang-select"
@@ -1087,6 +1072,23 @@ Date: ${dateStr}`;
                 </button>
               );
             })}
+            
+            {/* Mobile language selector */}
+            <div className="pt-3 mt-1 border-t border-white/15 flex items-center justify-between">
+              <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">{language === "Hindi" ? "भाषा बदलें:" : "Change Language:"}</span>
+              <select 
+                value={language}
+                onChange={(e) => {
+                  setLanguage(e.target.value);
+                  triggerFeedback(e.target.value === "Hindi" ? "भाषा हिंदी में बदल दी गई है" : "Language set to English");
+                }}
+                className="bg-gray-900 border border-white/10 text-gray-200 text-xs rounded-lg px-3 py-1.5 font-bold outline-none cursor-pointer focus:border-amber-500 hover:bg-gray-800 transition-colors"
+                id="mobile-lang-select"
+              >
+                <option value="English">English</option>
+                <option value="Hindi">हिन्दी (Hindi)</option>
+              </select>
+            </div>
           </div>
         )}
       </header>
@@ -1212,194 +1214,11 @@ Date: ${dateStr}`;
                   </div>
                 </div>
 
-                {/* FUTURE PLANNER AI ENGINE (MOCKUP ACCORDING TO SCREENSHOT) */}
-                <div className="glass-panel p-6 rounded-3xl border-white/10 bg-[#07070a]/90 space-y-5 relative overflow-hidden shadow-2xl">
-                  <div className="flex items-center justify-between border-b border-white/5 pb-3">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[9px] font-black text-[#FF9933] bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-full uppercase tracking-wider">AI</span>
-                      <h3 className="font-serif font-black text-md text-white tracking-wide">
-                        {language === "Hindi" ? "फ्यूचर प्लानर एआई" : "Future Planner AI"}
-                      </h3>
-                    </div>
-                    <span className="text-[9px] text-[#22c55e] font-mono font-black flex items-center gap-1">
-                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> LIVE
-                    </span>
-                  </div>
-
-                  <p className="text-xs text-gray-400 font-sans leading-relaxed">
-                    {language === "Hindi" 
-                      ? "एआई के साथ अपने भविष्य की योजनाएं बनाएं। व्यक्तिगत रोडमैप, छात्रवृत्ति गाइड और कैरियर परामर्श प्राप्त करें।" 
-                      : "Plan your future with AI. Complete the parameters below to instantly generate a tailored civic roadmap of schemes, scholarships, other training entitlements, and timelines."}
-                  </p>
-
-                  <div className="grid grid-cols-2 md:grid-cols-5 gap-3.5 pt-1">
-                    <div className="space-y-1">
-                      <label className="text-[9px] uppercase tracking-widest font-bold text-gray-500 block">{language === "Hindi" ? "आयु" : "Age"}</label>
-                      <select 
-                        value={plannerAge} 
-                        onChange={(e) => {
-                          setPlannerAge(e.target.value);
-                          triggerFeedback(`Age selected: ${e.target.value}`);
-                        }} 
-                        className="w-full bg-zinc-950 border border-white/10 rounded-xl p-2 text-xs text-white font-bold tracking-wide focus:border-[#FF9933]/55 focus:outline-none"
-                      >
-                        <option>15 Years</option>
-                        <option>18 Years</option>
-                        <option>21 Years</option>
-                        <option>25 Years</option>
-                      </select>
-                    </div>
-
-                    <div className="space-y-1">
-                      <label className="text-[9px] uppercase tracking-widest font-bold text-gray-500 block">{language === "Hindi" ? "लिंग" : "Gender"}</label>
-                      <select 
-                        value={plannerGender} 
-                        onChange={(e) => {
-                          setPlannerGender(e.target.value);
-                          triggerFeedback(`Gender selected: ${e.target.value}`);
-                        }} 
-                        className="w-full bg-zinc-950 border border-white/10 rounded-xl p-2 text-xs text-white font-bold tracking-wide focus:border-[#FF9933]/55 focus:outline-none"
-                      >
-                        <option>Male</option>
-                        <option>Female</option>
-                        <option>Other</option>
-                      </select>
-                    </div>
-
-                    <div className="space-y-1">
-                      <label className="text-[9px] uppercase tracking-widest font-bold text-gray-500 block">{language === "Hindi" ? "राज्य" : "State"}</label>
-                      <select 
-                        value={plannerState} 
-                        onChange={(e) => {
-                          setPlannerState(e.target.value);
-                          triggerFeedback(`State selected: ${e.target.value}`);
-                        }} 
-                        className="w-full bg-zinc-950 border border-white/10 rounded-xl p-2 text-xs text-white font-bold tracking-wide focus:border-[#FF9933]/55 focus:outline-none"
-                      >
-                        <option>Maharashtra</option>
-                        <option>Uttar Pradesh</option>
-                        <option>Bihar</option>
-                        <option>Assam</option>
-                        <option>Delhi</option>
-                      </select>
-                    </div>
-
-                    <div className="space-y-1">
-                      <label className="text-[9px] uppercase tracking-widest font-bold text-gray-500 block">{language === "Hindi" ? "शिक्षा" : "Education"}</label>
-                      <select 
-                        value={plannerEducation} 
-                        onChange={(e) => {
-                          setPlannerEducation(e.target.value);
-                          triggerFeedback(`Education level selected: ${e.target.value}`);
-                        }} 
-                        className="w-full bg-zinc-950 border border-white/10 rounded-xl p-2 text-xs text-white font-bold tracking-wide focus:border-[#FF9933]/55 focus:outline-none"
-                      >
-                        <option>10th Class</option>
-                        <option>12th (Science)</option>
-                        <option>12th (Arts/Commerce)</option>
-                        <option>Graduate</option>
-                      </select>
-                    </div>
-
-                    <div className="space-y-1 col-span-2 md:col-span-1">
-                      <label className="text-[9px] uppercase tracking-widest font-bold text-gray-500 block">{language === "Hindi" ? "करियर लक्ष्य" : "Career Goal"}</label>
-                      <select 
-                        value={plannerGoal} 
-                        onChange={(e) => {
-                          setPlannerGoal(e.target.value);
-                          triggerFeedback(`Goal target selected: ${e.target.value}`);
-                        }} 
-                        className="w-full bg-zinc-950 border border-white/10 rounded-xl p-2 text-xs text-white font-bold tracking-wide focus:border-[#FF9933]/55 focus:outline-none"
-                      >
-                        <option>NDA Officer</option>
-                        <option>Civil Services</option>
-                        <option>Software Engineer</option>
-                        <option>Agriculture Expert</option>
-                        <option>Entrepreneur</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="flex gap-2.5 justify-end">
-                    <button 
-                      onClick={() => {
-                        setPlannerAge("18 Years");
-                        setPlannerGender("Male");
-                        setPlannerState("Maharashtra");
-                        setPlannerEducation("12th (Science)");
-                        setPlannerGoal("NDA Officer");
-                        setActivePlannerStep(0);
-                        triggerFeedback(language === "Hindi" ? "सारे चयन रीसेट किए गए" : "Future Planner criteria reset.");
-                      }} 
-                      className="px-5 py-2 rounded-xl border border-white/10 text-xs text-zinc-400 hover:text-white hover:bg-white/5 font-extrabold cursor-pointer transition-all active:scale-95"
-                    >
-                      {language === "Hindi" ? "फिर से शुरू करें" : "Start Over"}
-                    </button>
-                    <button 
-                      onClick={() => {
-                        triggerFeedback(language === "Hindi" ? "एआई ने आपके मापदंडों के अनुसार एक व्यक्तिगत करियर योजना तैयार की है।" : "AI calculated a bespoke career roadmap! Navigating timeline below.");
-                        setActivePlannerStep((activePlannerStep + 1) % 6);
-                      }} 
-                      className="px-5 py-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-xs text-white font-black flex items-center gap-1.5 shadow-lg shadow-indigo-600/20 active:scale-95 transition-all cursor-pointer"
-                    >
-                      <Sparkles className="w-3.5 h-3.5 text-indigo-200" />
-                      <span>{language === "Hindi" ? "रोडमैप जनरेट करें" : "Generate Roadmap"}</span>
-                    </button>
-                  </div>
-
-                  {/* Timeline representation from Mockup */}
-                  <div className="border-t border-white/5 pt-4 space-y-4">
-                    <div className="flex justify-between items-center text-[9px] text-[#FF9933] font-mono tracking-widest uppercase">
-                      <span>{language === "Hindi" ? "अनुशंसित रोडमैप चरण" : "Tailored Active Roadmap"}</span>
-                      <span>{plannerGoal} • STEP {activePlannerStep + 1} OF 6</span>
-                    </div>
-
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5 text-[10px]">
-                      {[
-                        { step: 1, label: language === "Hindi" ? "1. खोजेंं" : "1. Discover", desc: "Prime Minister's Scholarship Scheme" },
-                        { step: 2, label: language === "Hindi" ? "2. छात्रवृत्ति" : "2. Scholarships", desc: "Maharashtra State Open Merit Guide" },
-                        { step: 3, label: language === "Hindi" ? "3. परीक्षा" : "3. Entry Exams", desc: "UPSC NDA Admission Cycle" },
-                        { step: 4, label: language === "Hindi" ? "4. प्रशिक्षण" : "4. Training Prep", desc: "Free SSB Interview Coaching" },
-                        { step: 5, label: language === "Hindi" ? "5. दस्तावेज़" : "5. Domicile Papers", desc: "Age/Domicile Certificate setup" },
-                        { step: 6, label: language === "Hindi" ? "6. एआई सलाह" : "6. Expert Advice", desc: "Digital Locker integration" }
-                      ].map((item, index) => {
-                        const isStepActive = index === activePlannerStep;
-                        return (
-                          <div 
-                            key={index}
-                            onClick={() => {
-                              setActivePlannerStep(index);
-                              triggerFeedback(`Roadmap step transitioned to stage ${index + 1}: ${item.label}`);
-                            }}
-                            className={`p-3 rounded-2xl border text-left transition-all duration-200 cursor-pointer space-y-1 relative group select-none ${
-                              isStepActive
-                                ? "bg-indigo-550/15 border-indigo-500/50 text-white shadow-lg shadow-indigo-550/5 scale-102"
-                                : "bg-black/40 border-white/5 text-zinc-400 hover:bg-zinc-900 hover:border-white/10"
-                            }`}
-                          >
-                            <div className="flex items-center justify-between">
-                              <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-black ${
-                                isStepActive ? "bg-indigo-550 text-white" : "bg-zinc-800 text-zinc-500"
-                              }`}>{item.step}</span>
-                              {isStepActive && <span className="absolute top-2 right-2 flex h-2 w-2">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
-                              </span>}
-                            </div>
-                            <div className="font-extrabold tracking-tight truncate">{item.label}</div>
-                            <div className="text-[8px] text-zinc-500 leading-normal line-clamp-2">{item.desc}</div>
-                          </div>
-                        );
-                      })}
-                    </div>
-
-                    <p className="text-[10px] text-zinc-500 text-center italic mt-1 bg-zinc-950/50 py-2 border border-white/5 rounded-2xl px-3 leading-relaxed">
-                      {language === "Hindi" 
-                        ? `💡 एआई अंतर्दृष्टि: ${plannerGoal} लक्ष्य के लिए, डिजिटल लॉकर में डोमिसाइल और एनसीसी क्रेडेंशियल्स सिंक करने से आपकी पात्रता मैचिंग दर 25% सुधरेगी।` 
-                        : `💡 AI Matcher Engine Info: Incorporating an official State Domicile and verified NCC enrollment in your DigiLocker locker pushes matching criteria validation of ${plannerGoal} protocols to 94%.`}
-                    </p>
-                  </div>
-                </div>
+                {/* BHARAT CAREER NAVIGATOR (UPGRADED FROM FUTURE PLANNER) */}
+                <BharatCareerNavigator 
+                  language={language}
+                  triggerFeedback={triggerFeedback}
+                />
 
               </div>
 
@@ -2370,10 +2189,14 @@ Date: ${dateStr}`;
                         onChange={(e) => setAgriTargetCrop(e.target.value)}
                         className="bg-gray-900 border border-white/10 text-gray-200 text-xs rounded-lg px-2.5 py-1.5 font-bold outline-none cursor-pointer focus:border-amber-500 w-full"
                       >
-                        <option value="Rice">{language === "Hindi" ? "धान (Rice)" : "Rice / Paddy"}</option>
+                        <option value="Rice">{language === "Hindi" ? "धान (Rice / Paddy)" : "Rice / Paddy"}</option>
                         <option value="Wheat">{language === "Hindi" ? "गेहूं (Wheat)" : "Wheat"}</option>
                         <option value="Maize">{language === "Hindi" ? "मक्का (Maize)" : "Maize"}</option>
-                        <option value="Tea">{language === "Hindi" ? "चाय (Tea - Hills Special)" : "Tea / Plantation"}</option>
+                        <option value="Tea">{language === "Hindi" ? "चाय (Tea / Plantation)" : "Tea / Plantation"}</option>
+                        <option value="Potato">{language === "Hindi" ? "आलू (Potato)" : "Potato"}</option>
+                        <option value="Sugarcane">{language === "Hindi" ? "गन्ना (Sugarcane)" : "Sugarcane"}</option>
+                        <option value="Cotton">{language === "Hindi" ? "कपास (Cotton)" : "Cotton"}</option>
+                        <option value="Mustard">{language === "Hindi" ? "सरसों (Mustard)" : "Mustard"}</option>
                       </select>
                     </div>
 
@@ -2440,7 +2263,11 @@ Date: ${dateStr}`;
                         Rice: { n: 120, p: 65, k: 60 },
                         Wheat: { n: 150, p: 60, k: 50 },
                         Maize: { n: 140, p: 70, k: 65 },
-                        Tea: { n: 180, p: 45, k: 90 }
+                        Tea: { n: 180, p: 45, k: 90 },
+                        Potato: { n: 110, p: 75, k: 120 },
+                        Sugarcane: { n: 200, p: 80, k: 110 },
+                        Cotton: { n: 90, p: 50, k: 70 },
+                        Mustard: { n: 85, p: 40, k: 45 }
                       };
 
                       const currTarget = targets[agriTargetCrop] || targets.Rice;
@@ -2581,6 +2408,77 @@ Date: ${dateStr}`;
                     {language === "Hindi" ? "प्रयोगशालाओं की मैपिंग एवं परीक्षण परिणामों में गड़बड़ी का निवारण।" : "Direct administrative desk of Soil Health Management under Integrated Nutrient Division."}
                   </p>
                 </div>
+              </div>
+            </div>
+
+            {/* BRAND NEW CROPS AND FIELDS ILLUSTRATION GALLERY (To fulfill 'add more crops and some phoyo in it' as requested) */}
+            <div className="glass-panel p-6 rounded-2xl border-white/5 space-y-6">
+              <div className="border-b border-white/10 pb-4">
+                <span className="text-[9px] font-black uppercase text-[#138808] bg-[#138808]/10 border border-[#138808]/20 px-2.5 py-1 rounded inline-block tracking-wider">
+                  {language === "Hindi" ? "कृषि प्रदर्शनी एवं शस्य चित्र" : "PROSPEROUS BHARAT CROP EXHIBITION"}
+                </span>
+                <h3 className="font-serif text-xl font-bold text-white mt-2">
+                  {language === "Hindi" ? "भारतीय भौगोलिक इंडिकेशन शस्य दीर्घा" : "Agricultural Land Restoration & Crop Gallery"}
+                </h3>
+                <p className="text-xs text-gray-400">
+                  {language === "Hindi" ? "राजकीय वित्तीय सब्सिडी योजनाओं द्वारा समर्थित देश की प्रमुख नकदी व खाद्यान्न फसलें।" : "Mapping major cash crops and grains backed by direct central subsidies and geographic index certifications."}
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {[
+                  { 
+                    cropEn: "Paddy / Basmati Rice", 
+                    cropHi: "सुगंधित बासमती धान", 
+                    url: "https://images.unsplash.com/photo-1534265222345-20934f20f16f?auto=format&fit=crop&w=400&q=80",
+                    descEn: "2% net PMFBY statutory rate",
+                    descHi: "२% शुद्ध पीएमएफबीवाई सांविधिक प्रीमियम दर"
+                  },
+                  { 
+                    cropEn: "Golden Wheat Harvest", 
+                    cropHi: "स्वर्णिम गेहूं फसल", 
+                    url: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=400&q=80",
+                    descEn: "1.5% Rabi premium shield",
+                    descHi: "१.५% रबी सुरक्षा प्रीमियम कवच"
+                  },
+                  { 
+                    cropEn: "Assam Hills Tea Gardens", 
+                    cropHi: "असम के पर्वतीय चाय बागान", 
+                    url: "https://images.unsplash.com/photo-1555899434-94d1368aa7af?auto=format&fit=crop&w=400&q=80",
+                    descEn: "Cash crop with high horticultural support",
+                    descHi: "बागवानी सहायता से युक्त उच्च मूल्यवान व्यावसायिक उपज"
+                  },
+                  { 
+                    cropEn: "Sugarcane & Agro-Biomass", 
+                    cropHi: "गन्ना और जैव-उर्वरक उपज", 
+                    url: "https://images.unsplash.com/photo-1593113630400-ea4288922497?auto=format&fit=crop&w=400&q=80",
+                    descEn: "FRP statutory minimum pricing support",
+                    descHi: "उचित और लाभकारी न्यूनतम मूल्य (FRP) सुरक्षा"
+                  }
+                ].map((item, idx) => (
+                  <div key={idx} className="bg-black/45 border border-white/5 rounded-2xl overflow-hidden group hover:border-[#FF9933]/40 transition-all duration-300">
+                    <div className="h-40 w-full overflow-hidden relative">
+                      <img 
+                        src={item.url} 
+                        alt={item.cropEn} 
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        referrerPolicy="no-referrer"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+                      <span className="absolute bottom-3 left-3 font-serif font-black text-xs text-white">
+                        {language === "Hindi" ? item.cropHi : item.cropEn}
+                      </span>
+                    </div>
+                    <div className="p-3.5 space-y-1">
+                      <span className="text-[10px] text-[#FF9933] font-mono font-bold block">
+                        {language === "Hindi" ? item.descHi : item.descEn}
+                      </span>
+                      <p className="text-[9px] text-gray-500 uppercase tracking-widest font-bold">
+                        {language === "Hindi" ? "केंद्र अनुमोदित योजनाएं" : "Union Approved Crops"}
+                      </p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -3205,195 +3103,23 @@ Date: ${dateStr}`;
               </p>
             </div>
 
-            {/* 🆕 HIGH-POLISHED SUB-TAB SELECTOR (MINIMAL & GORGEOUS) */}
-            <div className="flex justify-center" id="assistant-sub-tabs-bar">
-              <div className="bg-zinc-950/80 border border-white/10 rounded-2xl p-1 inline-flex gap-1 shadow-2xl">
-                <button
-                  onClick={() => {
-                    setAssistantSubTab("chat");
-                    triggerFeedback(language === "Hindi" ? "एआई सलाहकार सक्रिय" : "Switched to Interactive AI Advisor.");
-                  }}
-                  id="subtab-ai-chat-btn"
-                  className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
-                    assistantSubTab === "chat"
-                      ? "bg-gradient-to-r from-[#FF9933] to-[#FF9933]/90 text-black font-black shadow-md"
-                      : "text-gray-400 hover:text-white"
-                  }`}
-                >
-                  <HelpCircle className="w-4 h-4" />
-                  <span>{language === "Hindi" ? "इंटरेक्टिव एआई सलाहकार" : "Interactive AI Advisor"}</span>
-                </button>
-                <button
-                  onClick={() => {
-                    setAssistantSubTab("crisis");
-                    triggerFeedback(language === "Hindi" ? "लाइफ क्राइसिस नेविगेटर सक्रिय" : "Switched to Life Crisis Navigator.");
-                  }}
-                  id="subtab-crisis-nav-btn"
-                  className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer relative overflow-hidden ${
-                    assistantSubTab === "crisis"
-                      ? "bg-gradient-to-r from-[#FF9933] to-[#FF9933]/90 text-black font-black shadow-md"
-                      : "text-gray-400 hover:text-white"
-                  }`}
-                >
-                  <Compass className={`w-4 h-4 ${assistantSubTab === "crisis" ? "animate-spin" : ""}`} style={{ animationDuration: "12s" }} />
-                  <span>{language === "Hindi" ? "लाइफ क्राइसिस नेविगेटर™" : "Life Crisis Navigator™"}</span>
-                  <span className="absolute top-1 right-1 flex h-1.5 w-1.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#FF9933]"></span>
-                  </span>
-                </button>
-              </div>
-            </div>
-
-            {/* SUB-TAB CONTENTS */}
-            {assistantSubTab === "chat" ? (
-              /* --- CHAT SUITE --- */
-              <div className="space-y-4">
-                {/* Visual Suggested Quick Triggers */}
-                <div className="flex items-center gap-2 flex-wrap justify-center py-1">
-                  <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider pr-1">{language === "Hindi" ? "त्वरित सुझाव:" : "Quick Suggestions:"}</span>
-                  {[
-                    { text: "PM Kisan", label: "🚜 PM Kisan" },
-                    { text: "Ayushman Bharat", label: "🏥 Ayushman Card" },
-                    { text: "Scholarships", label: "🎓 Ishan Uday" },
-                    { text: "Aadhaar lost", label: "🆔 Aadhaar Check" },
-                    { text: "My claim was rejected", label: "❌ Rejection Help" },
-                    { text: "No documents", label: "🛡️ Undocumented Help" }
-                  ].map((chip) => (
-                    <button
-                      key={chip.text}
-                      onClick={() => handleChatSubmit(chip.text)}
-                      className="px-3 py-1 bg-zinc-950/60 border border-white/5 rounded-full text-[10px] text-gray-300 font-medium hover:border-[#FF9933] hover:text-[#FF9933] transition-all cursor-pointer"
-                    >
-                      {chip.label}
-                    </button>
-                  ))}
+            {/* --- BUREAUCRACY & LIFE CRISIS NAVIGATOR PANEL (12 KEY STATES) --- */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 animate-fadeIn" id="life-crisis-navigator-suite">
+              
+              {/* Visual LEFT column: Grid of 12 Events */}
+              <div className="lg:col-span-5 space-y-4">
+                <div className="p-4 bg-zinc-950 border border-white/5 rounded-2xl">
+                  <h3 className="text-xs uppercase font-extrabold text-[#FF9933] tracking-widest mb-1">
+                    {language === "Hindi" ? "१२ आपातकालीन जीवन स्थितियां" : "12 Emergency Life Situations"}
+                  </h3>
+                  <p className="text-[10px] text-gray-400">
+                    {language === "Hindi" 
+                      ? "संविधान और सरकारी नियमों के अंतर्गत अपनी स्थिति चुनें:" 
+                      : "Select your current state of affairs to unlock a complete roadmap:"}
+                  </p>
                 </div>
 
-                {/* Chatbox shell */}
-                <div className="glass-panel rounded-3xl border-white/10 overflow-hidden h-[540px] flex flex-col justify-between bg-[#05070f]/90">
-                  
-                  {/* Chat Header */}
-                  <div className="p-4 border-b border-white/10 bg-[#0A0D18] flex justify-between items-center shrink-0">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-zinc-950 border border-white/10 rounded-full flex items-center justify-center text-green">
-                        <div className="w-6 h-6 flex items-center justify-center">
-                          <svg viewBox="0 0 100 100" className="w-full h-full select-none" referrerPolicy="no-referrer">
-                            <path d="M 50 8 A 42 42 0 0 0 16 80 A 40 40 0 0 1 50 14 Z" fill="#FF9933" />
-                            <path d="M 50 8 A 42 42 0 0 1 84 80 A 40 40 0 0 0 50 14 Z" fill="#22C55E" />
-                            <circle cx="50" cy="46" r="4" fill="#FFFFFF" />
-                            <path d="M 35 40 C 40 49, 47 54, 50 66 C 53 54, 60 49, 65 40 Z" fill="#FFFFFF" />
-                          </svg>
-                        </div>
-                      </div>
-                      <div>
-                        <h4 className="font-serif font-black text-xs text-shimmer-dynamic leading-tight">Haqqdar Assistant</h4>
-                        <span className="text-[9px] text-saffron block font-semibold uppercase tracking-wider">Bilingual Citizen AI Counsel</span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center gap-2 px-3 py-1.5 bg-zinc-950 border border-amber-500/30 rounded-xl text-xs font-mono text-[#FF9933] shadow-inner select-none">
-                        <Clock className="w-3.5 h-3.5 text-saffron shrink-0" />
-                        <span className="font-extrabold tracking-widest">{clockTime}</span>
-                        <span className="text-[9px] text-zinc-400 font-sans font-bold border-l border-zinc-800 pl-2 hidden sm:inline">{clockDate}</span>
-                      </div>
-
-                      <button 
-                        onClick={() => {
-                          setChatSpeechEnabled(!chatSpeechEnabled);
-                          triggerFeedback(chatSpeechEnabled ? "Speech conversion output disabled." : "Bilingual Smart read aloud enabled.");
-                          if (!chatSpeechEnabled) {
-                            speakText("नमसकार! Read-aloud voice support has been activated.");
-                          }
-                        }}
-                        id="chat-speech-toggle-btn"
-                        className={`px-3 py-1.5 rounded-lg border text-[10px] uppercase font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-                          chatSpeechEnabled 
-                            ? "bg-amber-500 text-black border-amber-500 font-extrabold" 
-                            : "border-white/15 text-gray-400 hover:bg-white/5"
-                        }`}
-                      >
-                        {chatSpeechEnabled ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
-                        <span>{chatSpeechEnabled ? "Voice ON" : "Voice Off"}</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Chat Message Scroll list */}
-                  <div className="flex-1 overflow-y-auto p-4 space-y-4" id="chat-messages-container">
-                    {chatHistory.map((msg, idx) => (
-                      <div 
-                        key={idx}
-                        className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"} animate-fadeIn`}
-                      >
-                        <div 
-                          className={`max-w-md rounded-2xl p-4 space-y-2 shadow ${
-                            msg.role === "user" 
-                              ? "bg-gradient-to-tr from-[#FF9933] to-[#FF9933]/90 text-black font-semibold rounded-tr-none text-xs" 
-                              : "bg-white/[0.03] border border-white/5 text-gray-200 rounded-tl-none font-sans text-xs leading-relaxed"
-                          }`}
-                        >
-                          <pre className="whitespace-pre-wrap font-sans text-xs">{msg.text}</pre>
-                          <span className="block text-[8px] text-right text-gray-500/80 font-bold uppercase tracking-widest">{msg.time}</span>
-                        </div>
-                      </div>
-                    ))}
-
-                    {chatLoading && (
-                      <div className="flex justify-start">
-                        <div className="bg-white/[0.03] border border-white/5 rounded-2xl rounded-tl-none p-4 max-w-sm space-y-2 flex items-center gap-2">
-                          <span className="w-2 h-2 bg-[#FF9933] rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-                          <span className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-                          <span className="w-2 h-2 bg-[#138808] rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
-                          <span className="text-[10px] text-gray-500 uppercase font-bold tracking-widest ml-1">Searching directory...</span>
-                        </div>
-                      </div>
-                    )}
-                    
-                    <div ref={chatEndRef} />
-                  </div>
-
-                  {/* Chat Input form Footer */}
-                  <div className="p-4 bg-[#0A0D18] border-t border-white/10 shrink-0 flex gap-3">
-                    <input 
-                      type="text"
-                      placeholder="Describe your denial status or question (e.g. why am I rejected from PMAY or Ishan Uday?)..."
-                      value={chatInput}
-                      onChange={(e) => setChatInput(e.target.value)}
-                      onKeyDown={(e) => e.key === "Enter" && handleChatSubmit()}
-                      id="chat-input-field"
-                      className="w-full bg-[#05070F] border border-white/10 rounded-xl px-4 py-3.5 text-xs text-white placeholder-gray-500 outline-none focus:border-amber-500 font-medium"
-                    />
-                    <button 
-                      onClick={() => handleChatSubmit()}
-                      id="chat-submit-btn"
-                      className="bg-gradient-to-r from-[#FF9933] to-[#FF9933]/90 text-black font-extrabold px-5 rounded-xl text-xs hover:opacity-90 flex items-center justify-center shrink-0 block"
-                    >
-                      {language === "Hindi" ? "सलाहकार से पूछें" : "Ask advisor"}
-                    </button>
-                  </div>
-
-                </div>
-              </div>
-            ) : (
-              /* --- BUREAUCRACY & LIFE CRISIS NAVIGATOR PANEL (12 KEY STATES) --- */
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 animate-fadeIn" id="life-crisis-navigator-suite">
-                
-                {/* Visual LEFT column: Grid of 12 Events */}
-                <div className="lg:col-span-5 space-y-4">
-                  <div className="p-4 bg-zinc-950 border border-white/5 rounded-2xl">
-                    <h3 className="text-xs uppercase font-extrabold text-[#FF9933] tracking-widest mb-1">
-                      {language === "Hindi" ? "१२ आपातकालीन जीवन स्थितियां" : "12 Emergency Life Situations"}
-                    </h3>
-                    <p className="text-[10px] text-gray-400">
-                      {language === "Hindi" 
-                        ? "संविधान और सरकारी नियमों के अंतर्गत अपनी स्थिति चुनें:" 
-                        : "Select your current state of affairs to unlock a complete roadmap:"}
-                    </p>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-2 max-h-[460px] overflow-y-auto pr-1" id="crisis-grid-list">
+                <div className="grid grid-cols-2 gap-2 max-h-[460px] overflow-y-auto pr-1" id="crisis-grid-list">
                     {LIFE_CRISIS_PLAYBOOKS.map((pb) => {
                       const IconComponent = (() => {
                         switch (pb.iconName) {
@@ -3699,7 +3425,6 @@ ${activeCrisis.roadmap.map(r => `Step ${r.step}: ${r.title_en} at ${r.office}\n�
                 </div>
 
               </div>
-            )}
 
           </div>
         )}
