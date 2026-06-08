@@ -938,11 +938,11 @@ Date: ${dateStr}`;
               </svg>
             </div>
             <div>
-              <div className="flex items-center gap-2 leading-none">
-                <span className="font-sans font-black text-2xl md:text-3xl tracking-widest text-saffron uppercase">HAQQDAR</span>
-                <span className="text-[8px] font-bold bg-amber-500/10 text-saffron px-1 py-0.5 rounded border border-amber-500/20 tracking-wider">CITIZEN PORTAL</span>
+              <div className="flex items-center gap-1.5 leading-none">
+                <span className="font-sans font-black text-lg md:text-xl tracking-widest text-saffron uppercase">HAQQDAR</span>
+                <span className="text-[7.5px] font-extrabold bg-amber-500/10 text-saffron px-1.5 py-0.5 rounded border border-amber-500/20 tracking-wider">CITIZEN PORTAL</span>
               </div>
-              <p className="text-[9px] text-gray-400 mt-0.5 uppercase font-semibold tracking-wider">Democratic Inclusion • Verified Government Directory</p>
+              <p className="text-[8px] text-gray-400 mt-0.5 uppercase font-semibold tracking-wider">Democratic Inclusion • Verified Government Directory</p>
             </div>
           </div>
 
@@ -978,30 +978,37 @@ Date: ${dateStr}`;
             })}
           </nav>
 
-          {/* Accessibility controls and Language Dropdown */}
-          <div className="flex items-center gap-1.5">
-            
-            <select 
-              value={language}
-              id="header-lang-select"
-              onChange={(e) => {
-                setLanguage(e.target.value);
-                triggerFeedback(e.target.value === "Hindi" ? "भाषा हिंदी में बदल दी गई है" : "Language set to English");
-              }}
-              className="bg-gray-900 border border-white/10 text-gray-200 text-[10px] sm:text-xs rounded-lg px-2 py-1.5 font-bold outline-none cursor-pointer focus:border-amber-500 hover:bg-gray-800 transition-colors"
-            >
-              <option value="English">English</option>
-              <option value="Hindi">हिन्दी (Hindi)</option>
-            </select>
+          {/* Accessibility controls, Language Dropdown & Mini Status Dates */}
+          <div className="flex items-center gap-3">
+            {/* Live Ticking Indian Clock & Date (Extremely compact and neat as requested) */}
+            <div className="flex flex-col items-end text-right border-r border-white/10 pr-2.5 font-mono select-none">
+              <span className="text-[10px] font-black text-[#FF9933] tracking-widest leading-none">{clockTime}</span>
+              <span className="text-[7.5px] text-zinc-500 font-bold uppercase tracking-wider mt-0.5 leading-none">{clockDate}</span>
+            </div>
 
-            {/* Mobile menu trigger */}
-            <button 
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              id="mobile-menu-trigger"
-              className="lg:hidden p-2 rounded-lg border border-white/15 text-gray-300 hover:bg-white/5 cursor-pointer ml-1.5"
-            >
-              <Menu className="w-4 h-4" />
-            </button>
+            <div className="flex items-center gap-1.5">
+              <select 
+                value={language}
+                id="header-lang-select"
+                onChange={(e) => {
+                  setLanguage(e.target.value);
+                  triggerFeedback(e.target.value === "Hindi" ? "भाषा हिंदी में बदल दी गई है" : "Language set to English");
+                }}
+                className="bg-black border border-white/10 text-gray-300 text-[9px] sm:text-[10px] rounded px-1.5 py-1 font-bold outline-none cursor-pointer focus:border-amber-500 hover:bg-zinc-900 hover:text-white transition-colors"
+              >
+                <option value="English">English</option>
+                <option value="Hindi">हिन्दी</option>
+              </select>
+
+              {/* Mobile menu trigger */}
+              <button 
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                id="mobile-menu-trigger"
+                className="lg:hidden p-1.5 rounded-lg border border-[#ffffff]/15 text-gray-300 hover:bg-white/5 cursor-pointer"
+              >
+                <Menu className="w-3.5 h-3.5" />
+              </button>
+            </div>
           </div>
 
         </div>
