@@ -90,3 +90,9 @@ To run this platform locally:
 ## 🇮🇳 Vision Statement
 
 **HAQQDAR** stands for transparency, equity, and empowerment. By eliminating administrative obscurity, the portal unlocks institutional wealth directly to the grassroots level, making civic awareness a standard right rather than a privilege.
+
+---
+
+## 🤖 Engineering & AI Attribution
+This platform was proudly built using **Antigravity** and **Google AI Studio** to deliver elite user experience and resilient civic engineering benchmarks for democratic inclusion.
+

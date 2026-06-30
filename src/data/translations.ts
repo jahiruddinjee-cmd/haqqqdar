@@ -142,8 +142,8 @@ export const UI_TRANSLATIONS: Record<string, KeyTranslation> = {
   "rec.portal": { en: "Official Direct State Portal", hi: "आधिकारिक सरकारी वेबसाइट" },
   "rec.notice": { en: "Right to Written Order: Officers must share a signed reason for any rejection. Seek RTI on failure.", hi: "लिखित आदेश का अधिकार: कर्मचारी किसी भी अस्वीकृति पर हस्ताक्षर सहित लिखित कारण देने के लिए बाध्य हैं।" },
 
-  // Tab - Appeals and RTI Studio
-  "app.title": { en: "Statutory Appeals & RTI Drafting Studio", hi: "सूचना का अधिकार (RTI) एवं अपील स्टूडियो" },
+  // Tab - Appeals and RTI Hub
+  "app.title": { en: "Statutory Appeals & RTI Drafting Suite", hi: "सूचना का अधिकार (RTI) एवं अपील सूट" },
   "app.desc": { en: "Draft Section 6(1) Right to Information queries or Section 19(1) Appeals to contest delays. Affix ₹10 Postal Order to mail.", hi: "देरी या अस्वीकृति के विरुद्ध सूचना का अधिकार (RTI) की धारा 6(1) के तहत आवेदन पत्र या शिकायत पत्र तैयार करें।" },
   "app.form.type": { en: "Select Legal Action Draft", hi: "कानूनी प्रारूप का चयन करें" },
   "app.form.name": { en: "Applicant Full Legal Name", hi: "आवेदक का पूरा कानूनी नाम" },

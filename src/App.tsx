@@ -158,7 +158,7 @@ export default function App() {
   // Live Toast feedback messaging
   const [feedbackMsg, setFeedbackMsg] = useState<string>("");
 
-  // Appeals and RTI Studio form inputs
+  // Appeals and RTI Suite form inputs
   const [rtiForm, setRtiForm] = useState({
     type: "Application Status RTI",
     name: "Rajesh Kumar Gogoi",
@@ -625,7 +625,7 @@ export default function App() {
 • **1. Demand Reasons:** Public offices are legally required to deliver written, reasoned order files explaining your status.
 • **2. Verify spelling:** Check if spelling is identical across Aadhaar, bank records, and state directories.
 • **3. Seeding Check:** Verify with your bank manager that 'DBT Consent is active on the NPCI network mapping'. A bank account alone is not enough.
-• **4. Appeals Studio:** Utilize our 'Appeals' tab to draft a Section 6(1) RTI status query. Mail it with a ₹10 IPO tag via Speed Post.`;
+• **4. Appeals Hub:** Utilize our 'Appeals' tab to draft a Section 6(1) RTI status query. Mail it with a ₹10 IPO tag via Speed Post.`;
     }
     if (rawLine.includes("undocumented") || rawLine.includes("no card") || rawLine.includes("missing") || rawLine.includes("बिना दस्तावेज़") || rawLine.includes("খতিয়ান")) {
       return `**Baseline Document Inclusion Sequence:**
@@ -2914,13 +2914,13 @@ Date: ${dateStr}`;
           </div>
         )}
 
-        {/* 5. APPEALS TAB (Appeals & RTI studio with draft compiler & printable format) */}
+        {/* 5. APPEALS TAB (Appeals & RTI Center with draft compiler & printable format) */}
         {activeTab === "appeals" && (
           <div className="space-y-10 animate-fadeIn max-w-5xl mx-auto" id="tab-view-appeals">
             
             <div className="text-center space-y-3">
               <span className="text-xs text-[#FF9933] font-black uppercase tracking-widest bg-amber-500/10 border border-amber-500/20 px-3 py-1.5 rounded-full inline-flex items-center gap-1.5">
-                <FileText className="w-3.5 h-3.5" /> Lawful Administrative appeal Studio
+                <FileText className="w-3.5 h-3.5" /> Lawful Administrative appeal Console
               </span>
               <h1 className="font-serif text-3xl md:text-4xl font-extrabold tracking-tight text-white">Appeals & RTI Center</h1>
               <p className="text-xs text-gray-400 max-w-xl mx-auto leading-relaxed">
@@ -3638,7 +3638,7 @@ ${activeCrisis.roadmap.map(r => `Step ${r.step}: ${r.title_en} at ${r.office}\n�
           <div className="space-y-2 col-span-1">
             <h4 className="font-serif text-white font-bold uppercase text-[10px] tracking-wider font-serif">Legal Protections</h4>
             <div className="flex flex-col gap-2 text-[#FF9933]">
-              <button onClick={() => { setActiveTab("appeals"); window.scrollTo(0,0); }} className="hover:text-white text-left font-bold font-serif text-xs">RTI Letter Studio →</button>
+              <button onClick={() => { setActiveTab("appeals"); window.scrollTo(0,0); }} className="hover:text-white text-left font-bold font-serif text-xs">RTI Letter Desk →</button>
               <button onClick={() => { setActiveTab("northeast"); window.scrollTo(0,0); }} className="hover:text-white text-left font-bold font-serif text-xs">Northeast State Directories →</button>
               <div className="pt-2 border-t border-white/5 mt-1">
                 <button 
